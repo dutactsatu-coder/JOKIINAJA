@@ -40,9 +40,13 @@
             --gradient-secondary: linear-gradient(135deg, #06b6d4, #10b981);
             --gradient-accent: linear-gradient(135deg, #f59e0b, #ef4444);
             
-            /* PERBAIKAN: Section spacing untuk menghindari tertutup header */
-            --header-height: 65px;
-            --section-padding-top: calc(var(--header-height) + 2rem);
+            /* PERBAIKAN PASTI: Header Height & Scroll Offset */
+            /* Kita set fixed tinggi header, jangan diubah oleh media query agar scroll stabil */
+            --header-height: 70px; 
+            
+            /* Scroll offset lebih besar dari header + buffer */
+            --scroll-offset: calc(var(--header-height) + 40px);
+
             --border-radius: 16px;
             --border-radius-lg: 24px;
             --border-radius-xl: 32px;
@@ -104,11 +108,11 @@
         }
 
         html {
+            /* PERBAIKAN: Kunci scroll padding agar section tidak tertutup header */
             scroll-behavior: smooth;
-            scroll-padding-top: calc(var(--header-height) + 10px);
+            scroll-padding-top: var(--scroll-offset);
             overflow-x: hidden;
             width: 100%;
-            max-width: 100vw;
         }
 
         body {
@@ -120,16 +124,19 @@
             transition: all var(--transition-slow);
             min-height: 100vh;
             width: 100%;
-            padding-top: var(--header-height);
+            /* PERBAIKAN: Hapus padding-top body agar tidak ada white space aneh di atas */
         }
 
-        /* PERBAIKAN: Anchor offset untuk semua section */
-        #home,
-        #services,
-        #features,
-        #testimonials,
-        #contact {
-            scroll-margin-top: calc(var(--header-height) + 20px);
+        /* PERBAIKAN: Anchor offset manual untuk elemen section */
+        section {
+            /* Memastikan scroll stop memberi jarak aman dari header */
+            scroll-margin-top: var(--scroll-offset); 
+            position: relative;
+        }
+
+        /* Khusus Hero Section: Kita tambahkan padding top visual agar teks tidak menempel atap */
+        #home.hero {
+            padding-top: var(--header-height); 
         }
 
         ::selection {
@@ -194,8 +201,7 @@
         }
 
         .section {
-            padding: var(--section-padding-top) 0 6rem 0;
-            position: relative;
+            padding: 4rem 0 6rem 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -230,15 +236,17 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1001; /* PERBAIKAN: Z-index lebih tinggi */
+            /* Z-index cukup 1000, lebih tinggi dari konten normal */
+            z-index: 1000; 
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-light);
             transition: all var(--transition-slow);
-            height: var(--header-height);
-            max-height: 65px;
-            overflow: hidden;
+            /* PERBAIKAN: Gunakan var(--header-height) yang sudah dikunci di root */
+            height: var(--header-height); 
+            display: flex;
+            align-items: center;
         }
 
         header.hide {
@@ -263,11 +271,11 @@
             overflow: visible;
         }
 
-        /* Logo yang lebih kecil */
         .logo-container {
             position: relative;
             perspective: 1000px;
             flex-shrink: 0;
+            z-index: 1002;
         }
 
         .logo {
@@ -372,15 +380,14 @@
             50% { text-shadow: 0 0 20px var(--theme-color-1); }
         }
 
-        /* Header controls lebih kompak */
         .header-controls {
             display: flex;
             align-items: center;
             gap: 0.75rem;
             flex-shrink: 0;
+            z-index: 1002;
         }
 
-        /* Tombol Kalkulator AI lebih kecil */
         .btn.btn-primary.btn-sm {
             padding: 0.6rem 0.9rem;
             font-size: 0.85rem;
@@ -388,7 +395,6 @@
             min-height: 42px;
         }
 
-        /* Theme toggle lebih kecil */
         .theme-toggle {
             background: var(--bg-card);
             border: 1px solid var(--border);
@@ -437,7 +443,6 @@
             transform: rotate(15deg);
         }
 
-        /* Mobile toggle lebih kecil */
         .mobile-toggle {
             display: none;
             background: var(--bg-card);
@@ -459,7 +464,6 @@
             transform: rotate(90deg);
         }
 
-        /* Nav links yang lebih rapat */
         .nav-links {
             display: flex;
             align-items: center;
@@ -529,7 +533,7 @@
             visibility: hidden;
             transform: translateY(-10px);
             transition: all var(--transition-normal);
-            z-index: 1000;
+            z-index: 1003;
             box-shadow: var(--shadow);
         }
 
@@ -754,9 +758,8 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            padding-top: 0;
+            /* Padding top diatur di selector spesifik #home.hero */
             width: 100%;
-            margin-top: 0; /* PERBAIKAN: Menghapus margin negatif */
         }
 
         .hero-background {
@@ -767,6 +770,7 @@
             height: 100%;
             z-index: -1;
             opacity: 0.1;
+            pointer-events: none;
         }
 
         .hero-background svg {
@@ -1571,7 +1575,7 @@
             transform: translateY(-3px);
         }
 
-        /* === PERBAIKAN: MODAL CALCULATOR UNTUK MOBILE === */
+        /* === MODAL CALCULATOR (FIXED) === */
         .modal {
             position: fixed;
             top: 0;
@@ -1581,10 +1585,10 @@
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            display: none; /* PERBAIKAN: Diubah dari flex ke none */
+            display: none; /* Default hidden */
             align-items: center;
             justify-content: center;
-            z-index: 2000;
+            z-index: 2000; /* Di atas header */
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -1596,7 +1600,7 @@
         .modal.active {
             opacity: 1;
             visibility: visible;
-            display: flex; /* PERBAIKAN: Tampilkan saat aktif */
+            display: flex; /* Flex saat aktif */
         }
 
         .modal-content {
@@ -1622,7 +1626,6 @@
             opacity: 1;
         }
 
-        /* PERBAIKAN: Modal backdrop untuk iOS */
         .modal::before {
             content: '';
             position: fixed;
@@ -1634,7 +1637,6 @@
             z-index: -1;
         }
 
-        /* PERBAIKAN: Body overflow saat modal aktif */
         body.modal-open {
             overflow: hidden;
             position: fixed;
@@ -1741,21 +1743,10 @@
             transform: translateX(0);
         }
 
-        .notification.success {
-            border-left-color: var(--success);
-        }
-
-        .notification.error {
-            border-left-color: var(--danger);
-        }
-
-        .notification.warning {
-            border-left-color: var(--warning);
-        }
-
-        .notification.info {
-            border-left-color: var(--info);
-        }
+        .notification.success { border-left-color: var(--success); }
+        .notification.error { border-left-color: var(--danger); }
+        .notification.warning { border-left-color: var(--warning); }
+        .notification.info { border-left-color: var(--info); }
 
         .notification-content {
             display: flex;
@@ -1810,30 +1801,10 @@
         }
 
         /* === UTILITY CLASSES === */
-        .center-horizontal {
-            display: flex;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .center-vertical {
-            display: flex;
-            align-items: center;
-        }
-
-        .center-both {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .text-center-center {
-            text-align: center;
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-
+        .center-horizontal { display: flex; justify-content: center; width: 100%; }
+        .center-vertical { display: flex; align-items: center; }
+        .center-both { display: flex; justify-content: center; align-items: center; }
+        .text-center-center { text-align: center; margin-left: auto; margin-right: auto; display: block; }
         .text-center { text-align: center; }
         .text-right { text-align: right; }
         .text-left { text-align: left; }
@@ -1851,23 +1822,11 @@
         .hidden { display: none !important; }
         .visible { display: block !important; }
 
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease forwards;
-        }
+        .animate-fade-in { animation: fadeIn 0.8s ease forwards; }
+        .animate-slide-up { animation: slideUp 0.8s ease forwards; }
 
-        .animate-slide-up {
-            animation: slideUp 0.8s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
         * {
             transition: background-color var(--transition-slow),
@@ -1876,28 +1835,14 @@
                         box-shadow var(--transition-slow);
         }
 
-        .no-transition * {
-            transition: none !important;
-        }
+        .no-transition * { transition: none !important; }
 
         /* === RATING STARS === */
-        .rating-stars {
-            display: flex;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            color: #f59e0b;
-        }
+        .rating-stars { display: flex; gap: 0.5rem; font-size: 1.5rem; color: #f59e0b; }
+        .rating-stars .star { cursor: pointer; transition: all 0.2s; }
+        .rating-stars .star:hover { transform: scale(1.2); }
 
-        .rating-stars .star {
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .rating-stars .star:hover {
-            transform: scale(1.2);
-        }
-
-        /* === PERBAIKAN: KALKULATOR AI RESPONSIVE STYLES === */
+        /* === RESPONSIVE MODAL STYLES === */
         .modal#orderModal .modal-content {
             max-width: 500px;
             width: 90%;
@@ -1913,522 +1858,120 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .modal#orderModal .modal-title {
-            font-size: 1.5rem;
-            gap: 0.75rem;
-        }
-
-        .modal#orderModal .price-preview {
-            padding: 1.25rem;
-            margin: 1rem 0;
-        }
-
-        .modal#orderModal .price-amount {
-            font-size: 2.5rem;
-        }
-
-        .modal#orderModal .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .modal#orderModal .form-control {
-            padding: 0.875rem 1rem;
-            font-size: 0.95rem;
-        }
-
-        .modal#orderModal .speed-selector {
-            flex-direction: column;
-            gap: 0.75rem;
-            margin: 1rem 0;
-        }
-
-        .modal#orderModal .speed-option {
-            padding: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .modal#orderModal .speed-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0;
-        }
-
-        .modal#orderModal .speed-details {
-            flex-grow: 1;
-            text-align: left;
-        }
-
-        .modal#orderModal .speed-label {
-            margin-bottom: 0.25rem;
-            font-size: 0.95rem;
-        }
-
-        .modal#orderModal .speed-desc {
-            font-size: 0.8rem;
-        }
-
-        .modal#orderModal .speed-price {
-            font-size: 0.9rem;
-            margin-top: 0.25rem;
-        }
-
-        .modal#orderModal .btn-group {
-            flex-direction: column;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .modal#orderModal .btn {
-            padding: 0.875rem;
-            font-size: 0.95rem;
-        }
-
-        .modal#orderModal .coupon-section {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .modal#orderModal .coupon-section input {
-            flex-grow: 1;
-        }
-
-        .modal#orderModal .coupon-section button {
-            white-space: nowrap;
-            padding: 0 1.25rem;
-        }
-
-        /* === PERBAIKAN: Input tap target di mobile === */
-        @media (max-width: 768px) {
-            .form-control,
-            .speed-option,
-            .btn {
-                min-height: 44px; /* Ukuran tap target minimum untuk iOS */
-            }
-            
-            .modal-close {
-                width: 40px;
-                height: 40px;
-                top: 0.5rem;
-                right: 0.5rem;
-            }
-        }
-
-        /* === PERBAIKAN: Scroll behavior untuk modal di iOS === */
-        .modal-content {
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-        }
-
-        /* === MEDIA QUERIES UNTUK HEADER MOBILE === */
-        @media (max-width: 1024px) {
-            .nav-links {
-                gap: 1.25rem;
-            }
-            
-            .nav-link {
-                font-size: 0.85rem;
-            }
-            
-            .logo {
-                font-size: 1.3rem;
-            }
-            
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.4rem;
-            }
-            
-            .logo-main {
-                font-size: 1rem;
-            }
-        }
+        .modal#orderModal .modal-title { font-size: 1.5rem; gap: 0.75rem; }
+        .modal#orderModal .price-preview { padding: 1.25rem; margin: 1rem 0; }
+        .modal#orderModal .price-amount { font-size: 2.5rem; }
+        .modal#orderModal .form-group { margin-bottom: 1.25rem; }
+        .modal#orderModal .form-control { padding: 0.875rem 1rem; font-size: 0.95rem; }
+        .modal#orderModal .speed-selector { flex-direction: column; gap: 0.75rem; margin: 1rem 0; }
+        .modal#orderModal .speed-option { padding: 1rem; display: flex; align-items: center; gap: 1rem; }
+        .modal#orderModal .speed-icon { font-size: 1.5rem; margin-bottom: 0; }
+        .modal#orderModal .speed-details { flex-grow: 1; text-align: left; }
+        .modal#orderModal .speed-label { margin-bottom: 0.25rem; font-size: 0.95rem; }
+        .modal#orderModal .speed-desc { font-size: 0.8rem; }
+        .modal#orderModal .speed-price { font-size: 0.9rem; margin-top: 0.25rem; }
+        .modal#orderModal .btn-group { flex-direction: column; gap: 0.75rem; margin-top: 1rem; }
+        .modal#orderModal .btn { padding: 0.875rem; font-size: 0.95rem; }
+        .modal#orderModal .coupon-section { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .modal#orderModal .coupon-section input { flex-grow: 1; }
+        .modal#orderModal .coupon-section button { white-space: nowrap; padding: 0 1.25rem; }
 
         @media (max-width: 768px) {
-            :root {
-                --header-height: 58px;
-            }
+            .form-control, .speed-option, .btn { min-height: 44px; }
+            .modal-close { width: 40px; height: 40px; top: 0.5rem; right: 0.5rem; }
             
-            header {
-                max-height: 58px;
-            }
+            /* PERBAIKAN RESPONSIVE HEADER */
+            /* Header tetap menggunakan var(--header-height) tapi layout disesuaikan */
+            header { height: var(--header-height); }
+            .nav-container { padding: 0 0.8rem; height: var(--header-height); }
             
-            .nav-container {
-                padding: 0 0.8rem;
-            }
+            .logo { font-size: 1.1rem; gap: 0.4rem; }
+            .logo-icon { width: 36px; height: 36px; font-size: 1.2rem; border-radius: 8px; }
+            .logo-main { font-size: 0.9rem; }
+            .logo-sub { font-size: 0.55rem; }
             
-            .logo {
-                font-size: 1.1rem;
-                gap: 0.4rem;
-            }
+            /* Modal mobile fixes */
+            .modal#orderModal .modal-content { padding: 1.25rem; max-width: 98%; width: 98%; max-height: 95vh; }
+            .modal#orderModal .modal-header { padding-bottom: 1rem; }
+            .modal#orderModal .modal-title { font-size: 1.3rem; }
+            .modal#orderModal .price-amount { font-size: 2rem; }
+            .modal#orderModal .form-control { padding: 0.75rem 1rem; font-size: 0.9rem; }
+            .modal#orderModal .speed-selector { flex-direction: column; gap: 0.5rem; }
+            .modal#orderModal .speed-option { padding: 0.875rem; }
             
-            .logo-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 1.2rem;
-                border-radius: 8px;
-            }
-            
-            .logo-main {
-                font-size: 0.9rem;
-            }
-            
-            .logo-sub {
-                font-size: 0.55rem;
-            }
-            
-            /* PERBAIKAN: Modal untuk mobile */
-            .modal#orderModal .modal-content {
-                padding: 1.25rem;
-                max-width: 98%;
-                width: 98%;
-                max-height: 95vh;
-            }
-            
-            .modal#orderModal .modal-header {
-                padding-bottom: 1rem;
-            }
-            
-            .modal#orderModal .modal-title {
-                font-size: 1.3rem;
-            }
-            
-            .modal#orderModal .price-amount {
-                font-size: 2rem;
-            }
-            
-            .modal#orderModal .form-control {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .modal#orderModal .speed-selector {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .modal#orderModal .speed-option {
-                padding: 0.875rem;
-            }
-            
-            /* Sembunyikan nav links di mobile */
             .nav-links {
-                position: fixed;
-                top: var(--header-height);
-                left: 0;
-                width: 100%;
-                background: var(--bg-card);
-                flex-direction: column;
-                padding: 0;
-                gap: 0;
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: all var(--transition-normal);
-                box-shadow: var(--shadow);
-                border-top: 1px solid var(--border);
-                z-index: 999;
-                max-height: calc(100vh - var(--header-height));
-                overflow-y: auto;
+                position: fixed; top: var(--header-height); left: 0; width: 100%;
+                background: var(--bg-card); flex-direction: column; padding: 0; gap: 0;
+                transform: translateY(-100%); opacity: 0; visibility: hidden;
+                transition: all var(--transition-normal); box-shadow: var(--shadow);
+                border-top: 1px solid var(--border); z-index: 999;
+                max-height: calc(100vh - var(--header-height)); overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
             }
-
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .nav-link {
-                padding: 1rem 1.5rem;
-                width: 100%;
-                border-bottom: 1px solid var(--border-light);
-                font-size: 0.95rem;
-            }
-
-            .nav-link:last-child {
-                border-bottom: none;
-            }
+            .nav-links.active { transform: translateY(0); opacity: 1; visibility: visible; }
+            .nav-link { padding: 1rem 1.5rem; width: 100%; border-bottom: 1px solid var(--border-light); font-size: 0.95rem; }
+            .nav-link:last-child { border-bottom: none; }
             
-            /* Header controls mobile */
-            .header-controls {
-                gap: 0.5rem;
-            }
+            .header-controls { gap: 0.5rem; }
+            .btn.btn-primary.btn-sm .btn-text { display: none; }
+            .btn.btn-primary.btn-sm { padding: 0.5rem; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+            .btn.btn-primary.btn-sm i { margin: 0; font-size: 1.1rem; }
+            .theme-toggle { width: 40px; height: 40px; }
+            .theme-toggle i { font-size: 0.9rem; }
+            .mobile-toggle { display: flex; }
+            .theme-options { position: fixed; top: var(--header-height); right: 0.8rem; left: auto; bottom: auto; transform-origin: top right; }
             
-            /* Tombol Kalkulator AI hanya icon di mobile */
-            .btn.btn-primary.btn-sm .btn-text {
-                display: none;
-            }
-            
-            .btn.btn-primary.btn-sm {
-                padding: 0.5rem;
-                width: 42px;
-                height: 42px;
-                border-radius: 10px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .btn.btn-primary.btn-sm i {
-                margin: 0;
-                font-size: 1.1rem;
-            }
-            
-            /* Theme toggle mobile */
-            .theme-toggle {
-                width: 40px;
-                height: 40px;
-            }
-            
-            .theme-toggle i {
-                font-size: 0.9rem;
-            }
-            
-            /* Mobile toggle muncul */
-            .mobile-toggle {
-                display: flex;
-            }
-            
-            /* Theme options position mobile */
-            .theme-options {
-                position: fixed;
-                top: var(--header-height);
-                right: 0.8rem;
-                left: auto;
-                bottom: auto;
-                transform-origin: top right;
-            }
-            
-            /* Adjust hero untuk header yang lebih kecil */
-            .hero {
-                padding-top: 0;
-            }
-            
-            .container {
-                padding: 0 1.5rem;
-                max-width: 100%;
-            }
-
-            .section {
-                padding: 4rem 0;
-            }
-
-            .hero-content {
-                padding: 0 1rem;
-            }
-
-            .hero-title {
-                font-size: 1.8rem;
-                line-height: 1.2;
-                margin-bottom: 1rem;
-            }
-
-            .hero-subtitle {
-                font-size: 0.9rem;
-                margin-bottom: 2rem;
-            }
-
-            .btn-group {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .btn {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-                width: 100%;
-            }
-
-            .testimonial-card-next {
-                flex: 0 0 100%;
-            }
-
-            .modal-content {
-                padding: 2rem 1.5rem;
-                max-width: 95vw;
-            }
-
-            .price-amount {
-                font-size: 2.5rem;
-            }
-
-            .speed-selector {
-                flex-direction: column;
-            }
-
-            .testimonial-filter {
-                flex-direction: column;
-                align-items: center;
-                max-width: 100%;
-                padding: 0 1rem;
-            }
-
-            .filter-btn {
-                width: 100%;
-                max-width: 200px;
-            }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-                padding: 0 1rem;
-                max-width: 100%;
-            }
-            
-            .btn-group {
-                flex-direction: column;
-                width: 100%;
-                padding: 0 1rem;
-            }
-            
-            .btn {
-                width: 100%;
-                max-width: 100%;
-            }
+            .container { padding: 0 1.5rem; max-width: 100%; }
+            .section { padding: 4rem 0; }
+            .hero-content { padding: 0 1rem; }
+            .hero-title { font-size: 1.8rem; line-height: 1.2; margin-bottom: 1rem; }
+            .hero-subtitle { font-size: 0.9rem; margin-bottom: 2rem; }
+            .btn-group { flex-direction: column; gap: 0.75rem; }
+            .btn { padding: 0.75rem 1rem; font-size: 0.9rem; width: 100%; }
+            .testimonial-card-next { flex: 0 0 100%; }
+            .modal-content { padding: 2rem 1.5rem; max-width: 95vw; }
+            .price-amount { font-size: 2.5rem; }
+            .speed-selector { flex-direction: column; }
+            .testimonial-filter { flex-direction: column; align-items: center; max-width: 100%; padding: 0 1rem; }
+            .filter-btn { width: 100%; max-width: 200px; }
+            .cards-grid { grid-template-columns: 1fr; padding: 0 1rem; max-width: 100%; }
+            .btn-group { flex-direction: column; width: 100%; padding: 0 1rem; }
+            .btn { width: 100%; max-width: 100%; }
         }
 
         @media (max-width: 480px) {
-            :root {
-                --header-height: 55px;
-            }
+            /* PERBAIKAN: Pada layar sangat kecil, kita sesuaikan padding container saja */
+            .container { padding: 0 1rem; }
+            .hero-title { font-size: 1.5rem; line-height: 1.2; }
+            .hero-subtitle { font-size: 0.8rem; padding: 0 0.5rem; }
+            .contact-form { padding: 1.5rem; }
+            .modal-content { padding: 1.5rem 1rem; }
+            .notification { right: 1rem; left: 1rem; max-width: none; }
+            .back-to-top { right: 1rem; bottom: 1rem; }
+            .cards-grid { grid-template-columns: 1fr; }
             
-            header {
-                max-height: 55px;
-            }
-            
-            .nav-container {
-                padding: 0 0.7rem;
-            }
-            
-            /* PERBAIKAN: Modal untuk iPhone kecil */
-            .modal#orderModal .modal-content {
-                padding: 1rem;
-                max-width: 99%;
-                width: 99%;
-            }
-            
-            .modal#orderModal .modal-title {
-                font-size: 1.1rem;
-            }
-            
-            .modal#orderModal .price-amount {
-                font-size: 1.75rem;
-            }
-            
-            .modal#orderModal .btn {
-                padding: 0.875rem;
-                font-size: 0.85rem;
-            }
-            
-            /* Logo lebih minimalis */
-            .logo {
-                font-size: 1rem;
-                gap: 0.35rem;
-            }
-            
-            .logo-icon {
-                width: 34px;
-                height: 34px;
-                font-size: 1.1rem;
-            }
-            
-            .logo-main {
-                font-size: 0.85rem;
-            }
-            
-            .logo-sub {
-                font-size: 0.5rem;
-                letter-spacing: 0.3px;
-            }
-            
-            /* Header controls mobile kecil */
-            .header-controls {
-                gap: 0.4rem;
-            }
-            
-            .btn.btn-primary.btn-sm {
-                width: 38px;
-                height: 38px;
-                padding: 0.4rem;
-            }
-            
-            .btn.btn-primary.btn-sm i {
-                font-size: 1rem;
-            }
-            
-            .theme-toggle {
-                width: 38px;
-                height: 38px;
-            }
-            
-            .mobile-toggle {
-                width: 38px;
-                height: 38px;
-                font-size: 1.1rem;
-            }
-            
-            /* Theme options untuk layar kecil */
-            .theme-options {
-                right: 0.7rem;
-            }
-            
-            .theme-option {
-                width: 32px;
-                height: 32px;
-                font-size: 0.8rem;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .hero-title {
-                font-size: 1.5rem;
-                line-height: 1.2;
-            }
-
-            .hero-subtitle {
-                font-size: 0.8rem;
-                padding: 0 0.5rem;
-            }
-
-            .contact-form {
-                padding: 1.5rem;
-            }
-
-            .modal-content {
-                padding: 1.5rem 1rem;
-            }
-
-            .notification {
-                right: 1rem;
-                left: 1rem;
-                max-width: none;
-            }
-            
-            .back-to-top {
-                right: 1rem;
-                bottom: 1rem;
-            }
-            
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
+            .nav-container { padding: 0 0.7rem; height: var(--header-height); }
+            .logo { font-size: 1rem; gap: 0.35rem; }
+            .logo-icon { width: 34px; height: 34px; font-size: 1.1rem; }
+            .logo-main { font-size: 0.85rem; }
+            .logo-sub { font-size: 0.5rem; letter-spacing: 0.3px; }
+            .header-controls { gap: 0.4rem; }
+            .btn.btn-primary.btn-sm { width: 38px; height: 38px; padding: 0.4rem; }
+            .btn.btn-primary.btn-sm i { font-size: 1rem; }
+            .theme-toggle { width: 38px; height: 38px; }
+            .mobile-toggle { width: 38px; height: 38px; font-size: 1.1rem; }
+            .theme-options { right: 0.7rem; }
+            .theme-option { width: 32px; height: 32px; font-size: 0.8rem; }
+            .modal#orderModal .modal-content { padding: 1rem; max-width: 99%; width: 99%; }
+            .modal#orderModal .modal-title { font-size: 1.1rem; }
+            .modal#orderModal .price-amount { font-size: 1.75rem; }
+            .modal#orderModal .btn { padding: 0.875rem; font-size: 0.85rem; }
         }
 
         /* Fix untuk iPhone dengan notch */
         @supports (padding: max(0px)) {
-            header {
-                padding-left: env(safe-area-inset-left);
-                padding-right: env(safe-area-inset-right);
-            }
-            
-            .nav-container {
-                padding-left: max(0.8rem, env(safe-area-inset-left));
-                padding-right: max(0.8rem, env(safe-area-inset-right));
-            }
+            header { padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right); }
+            .nav-container { padding-left: max(0.8rem, env(safe-area-inset-left)); padding-right: max(0.8rem, env(safe-area-inset-right)); }
         }
     </style>
 </head>
@@ -2498,7 +2041,7 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-primary btn-sm" onclick="openOrderModal()" id="calculatorBtn">
+                <button class="btn btn-primary btn-sm" id="calculatorBtn">
                     <i class="fas fa-robot"></i>
                     <span class="btn-text">Kalkulator AI</span>
                 </button>
@@ -2537,7 +2080,7 @@
                 </p>
                 
                 <div class="btn-group animate-slide-up">
-                    <button class="btn btn-primary btn-lg floating" onclick="openOrderModal()">
+                    <button class="btn btn-primary btn-lg floating" id="heroCalcBtn">
                         <i class="fas fa-calculator"></i> Kalkulator Harga AI
                     </button>
                     <a href="https://wa.me/6282125283598" target="_blank" class="btn btn-secondary btn-lg pulse" id="whatsappButton">
@@ -2579,6 +2122,7 @@
             <p class="text-center mb-4">Pilih layanan sesuai kebutuhan. ⚡ <strong>Butuh cepat? Tambah Rp 35K untuk pengerjaan 6 jam!</strong></p>
             
             <div class="cards-grid">
+                <!-- Service Card 1 -->
                 <div class="card">
                     <div class="card-icon">
                         <i class="fas fa-file-alt"></i>
@@ -2611,6 +2155,7 @@
                     </div>
                 </div>
                 
+                <!-- Service Card 2 -->
                 <div class="card">
                     <div class="card-icon">
                         <i class="fas fa-presentation"></i>
@@ -2643,6 +2188,7 @@
                     </div>
                 </div>
                 
+                <!-- Service Card 3 -->
                 <div class="card">
                     <div class="card-icon">
                         <i class="fas fa-book-reader"></i>
@@ -2677,6 +2223,7 @@
             </div>
             
             <div class="cards-grid mt-4">
+                <!-- Service Card 4 -->
                 <div class="card">
                     <div class="card-icon">
                         <i class="fas fa-file-contract"></i>
@@ -2709,6 +2256,7 @@
                     </div>
                 </div>
                 
+                <!-- Service Card 5 -->
                 <div class="card">
                     <div class="card-icon">
                         <i class="fas fa-code"></i>
@@ -2741,6 +2289,7 @@
                     </div>
                 </div>
                 
+                <!-- Service Card 6 -->
                 <div class="card">
                     <div class="card-icon">
                         <i class="fas fa-chart-line"></i>
@@ -3043,7 +2592,7 @@
         </div>
     </footer>
 
-    <!-- Order Modal (Kalkulator AI) - DIPERBAIKI -->
+    <!-- Order Modal (Kalkulator AI) - FIXED & ROBUST -->
     <div class="modal" id="orderModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeOrderModal()">
@@ -3057,7 +2606,7 @@
                 <p>Hitung harga tugas Anda dengan mudah</p>
             </div>
             
-            <form id="orderForm">
+            <form id="orderForm" onsubmit="return false;">
                 <div class="form-group">
                     <label class="form-label" for="serviceType">Jenis Tugas</label>
                     <select id="serviceType" class="form-control">
@@ -3126,7 +2675,7 @@
                 <p>Bagikan pengalaman Anda menggunakan JOKIINAJA</p>
             </div>
             
-            <form id="testimonialForm">
+            <form id="testimonialForm" onsubmit="return false;">
                 <div class="form-group">
                     <label class="form-label" for="testimonialName">Nama Anda</label>
                     <input type="text" id="testimonialName" class="form-control" placeholder="Nama lengkap atau inisial" required>
@@ -3166,7 +2715,7 @@
                     <textarea id="testimonialMessage" class="form-control" rows="4" placeholder="Ceritakan pengalaman Anda menggunakan layanan kami..." required></textarea>
                 </div>
                 
-                <button type="submit" class="btn btn-primary btn-full">
+                <button type="button" class="btn btn-primary btn-full" onclick="submitTestimonialForm()">
                     <i class="fas fa-paper-plane"></i> Kirim Testimoni
                 </button>
             </form>
@@ -3193,145 +2742,111 @@
     </button>
 
     <script>
-        // ========== KALKULATOR AI - FIXED VARIABLES ==========
+        // ========== KALKULATOR AI - ROBUST VARIABLES ==========
         let currentSpeed = 'normal';
         let speedFee = 0;
         let currentServicePrice = 7000;
         let currentUnit = 'halaman';
         let currentServiceName = 'Laporan & Makalah';
-        let modalOpening = false; // Flag untuk mencegah multiple openings
+        
+        // ========== FIX: EVENT LISTENER TRACKING ==========
+        let isCalculatorInitialized = false;
 
-        // ========== PERBAIKAN: KALKULATOR AI FUNCTIONS ==========
+        // ========== FIX: OPEN MODAL FUNCTION ==========
         function openOrderModal() {
-            if (modalOpening) return;
-            modalOpening = true;
-            
+            console.log('Opening Modal...');
             const modal = document.getElementById('orderModal');
-            const modalContent = modal.querySelector('.modal-content');
             
-            // Reset state modal
+            if (modal.classList.contains('active')) {
+                console.log('Modal already active');
+                return;
+            }
+
             modal.style.display = 'flex';
-            modalContent.style.opacity = '0';
-            modalContent.style.transform = 'translateY(20px)';
-            
-            // Trigger reflow
-            void modal.offsetWidth;
-            
-            // Tambah kelas active
+            void modal.offsetWidth; 
             modal.classList.add('active');
             document.body.classList.add('modal-open');
             
-            // Reset kalkulator
+            if (!isCalculatorInitialized) {
+                setupAICalculator();
+                isCalculatorInitialized = true;
+            } else {
+                calculateAIPrice();
+            }
+            
             resetAICalculator();
-            
-            // Setup calculator
-            setupAICalculator();
-            
-            // Hitung harga awal
-            calculateAIPrice();
-            
-            // Animate in
-            setTimeout(() => {
-                modalContent.style.opacity = '1';
-                modalContent.style.transform = 'translateY(0)';
-                modalOpening = false;
-            }, 10);
-            
-            // Prevent body scroll
-            document.body.style.overflow = 'hidden';
         }
 
         function closeOrderModal() {
             const modal = document.getElementById('orderModal');
-            const modalContent = modal.querySelector('.modal-content');
-            
-            // Animate out
-            modalContent.style.opacity = '0';
-            modalContent.style.transform = 'translateY(20px)';
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
             
             setTimeout(() => {
-                modal.classList.remove('active');
-                document.body.classList.remove('modal-open');
-                modal.style.display = 'none';
-                
-                // Restore body scroll
-                document.body.style.overflow = 'auto';
+                if (!modal.classList.contains('active')) {
+                    modal.style.display = 'none';
+                }
             }, 300);
         }
 
-        // ========== PERBAIKAN: SETUP CALCULATOR ==========
+        // ========== SETUP CALCULATOR ==========
         function setupAICalculator() {
-            console.log('Setting up AI Calculator...');
+            console.log('Initializing Calculator Listeners...');
             
-            // Event listener untuk service type
             const serviceType = document.getElementById('serviceType');
-            if (serviceType) {
-                serviceType.addEventListener('change', function() {
-                    currentServicePrice = parseInt(this.value);
-                    const selectedOption = this.options[this.selectedIndex];
-                    currentServiceName = selectedOption.text.split(' (')[0];
-                    
-                    // Update unit
-                    if (selectedOption.text.includes('/hal')) {
-                        currentUnit = 'halaman';
-                    } else if (selectedOption.text.includes('/slide')) {
-                        currentUnit = 'slide';
-                    } else if (selectedOption.text.includes('/project')) {
-                        currentUnit = 'project';
-                    }
-                    
-                    updateSpeedSelector();
-                    calculateAIPrice();
-                });
-            }
-            
-            // Event listener untuk quantity
             const quantityInput = document.getElementById('quantity');
-            if (quantityInput) {
-                quantityInput.addEventListener('input', function() {
-                    if (this.value < 1) this.value = 1;
-                    if (this.value > 1000) this.value = 1000;
-                    calculateAIPrice();
-                });
-                
-                quantityInput.addEventListener('change', function() {
-                    if (!this.value || this.value < 1) this.value = 1;
-                    calculateAIPrice();
-                });
-            }
-            
-            // Event listener untuk coupon
             const couponInput = document.getElementById('coupon');
-            if (couponInput) {
-                couponInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        e.preventDefault();
-                        applyCoupon();
-                    }
-                });
-            }
             
-            // Event listener untuk form submission
-            const orderForm = document.getElementById('orderForm');
-            if (orderForm) {
-                orderForm.addEventListener('submit', function(e) {
+            // Clone and replace to remove old listeners
+            const newServiceType = serviceType.cloneNode(true);
+            serviceType.parentNode.replaceChild(newServiceType, serviceType);
+            
+            const newQuantityInput = quantityInput.cloneNode(true);
+            quantityInput.parentNode.replaceChild(newQuantityInput, quantityInput);
+            
+            document.getElementById('serviceType').addEventListener('change', function() {
+                currentServicePrice = parseInt(this.value);
+                const selectedOption = this.options[this.selectedIndex];
+                currentServiceName = selectedOption.text.split(' (')[0];
+                
+                if (selectedOption.text.includes('/hal')) {
+                    currentUnit = 'halaman';
+                } else if (selectedOption.text.includes('/slide')) {
+                    currentUnit = 'slide';
+                } else if (selectedOption.text.includes('/project')) {
+                    currentUnit = 'project';
+                }
+                
+                updateSpeedSelector();
+                calculateAIPrice();
+            });
+            
+            document.getElementById('quantity').addEventListener('input', function() {
+                if (this.value < 1) this.value = 1;
+                if (this.value > 1000) this.value = 1000;
+                calculateAIPrice();
+            });
+            
+            document.getElementById('quantity').addEventListener('change', function() {
+                if (!this.value || this.value < 1) this.value = 1;
+                calculateAIPrice();
+            });
+            
+            document.getElementById('coupon').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
                     e.preventDefault();
-                    placeAIOrder();
-                });
-            }
-            
-            // Initial update
+                    applyCoupon();
+                }
+            });
+
             updateSpeedSelector();
             calculateAIPrice();
         }
 
-        // ========== PERBAIKAN: SPEED SELECTOR ==========
+        // ========== SPEED SELECTOR ==========
         function updateSpeedSelector() {
             const speedContainer = document.getElementById('speedSelectorContainer');
-            if (!speedContainer) {
-                console.error('Speed container not found');
-                return;
-            }
+            if (!speedContainer) return;
             
             let expressFee = 35000;
             let expressTime = '6-12 jam';
@@ -3378,7 +2893,7 @@
             `;
         }
 
-        // ========== PERBAIKAN: CALCULATOR FUNCTIONS ==========
+        // ========== CALCULATOR LOGIC ==========
         function selectSpeed(speed, fee) {
             currentSpeed = speed;
             speedFee = fee;
@@ -3406,10 +2921,7 @@
             const totalPriceElement = document.getElementById('totalPrice');
             const priceBreakdownElement = document.getElementById('priceBreakdown');
             
-            if (!serviceType || !quantityInput || !totalPriceElement || !priceBreakdownElement) {
-                console.error('Calculator elements not found');
-                return;
-            }
+            if (!serviceType || !quantityInput || !totalPriceElement || !priceBreakdownElement) return;
             
             const quantity = parseInt(quantityInput.value) || 1;
             const servicePrice = parseInt(serviceType.value) || 7000;
@@ -3534,9 +3046,14 @@
         }
 
         function resetAICalculator() {
-            document.getElementById('serviceType').selectedIndex = 0;
-            document.getElementById('quantity').value = '1';
-            document.getElementById('coupon').value = '';
+            const st = document.getElementById('serviceType');
+            if(st) st.selectedIndex = 0;
+            
+            const q = document.getElementById('quantity');
+            if(q) q.value = '1';
+            
+            const c = document.getElementById('coupon');
+            if(c) c.value = '';
             
             currentSpeed = 'normal';
             speedFee = 0;
@@ -3546,8 +3063,6 @@
             
             updateSpeedSelector();
             calculateAIPrice();
-            
-            showNotification('Kalkulator Direset', 'Semua input telah dikembalikan ke pengaturan awal', 'info');
         }
 
         function saveOrderDraft() {
@@ -3567,39 +3082,15 @@
             }
         }
 
-        function loadOrderDraft() {
-            try {
-                const savedDraft = localStorage.getItem('jokiOrderDraft');
-                if (savedDraft) {
-                    const draft = JSON.parse(savedDraft);
-                    document.getElementById('serviceType').value = draft.serviceType || '7000';
-                    document.getElementById('quantity').value = draft.quantity || '1';
-                    document.getElementById('coupon').value = draft.coupon || '';
-                    
-                    if (draft.speed) {
-                        currentSpeed = draft.speed;
-                    }
-                    
-                    currentServicePrice = parseInt(draft.serviceType) || 7000;
-                    updateSpeedSelector();
-                    calculateAIPrice();
-                    return true;
-                }
-            } catch (e) {
-                console.log('No saved draft or draft corrupted');
-            }
-            return false;
-        }
-
-        // ========== MAIN JAVASCRIPT ==========
+        // ========== MAIN INITIALIZATION ==========
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('JOKIINAJA - Loading dengan Kalkulator AI yang sudah diperbaiki...');
+            console.log('JOKIINAJA - Initializing...');
             
-            // ========== LOADING SCREEN ==========
+            // Loading Screen
             setTimeout(() => {
                 document.getElementById('loadingScreen').classList.add('loaded');
                 
-                // Animate hero elements
+                // Animate elements
                 setTimeout(() => {
                     const heroTitle = document.querySelector('.hero-title');
                     const heroSubtitle = document.querySelector('.hero-subtitle');
@@ -3612,141 +3103,90 @@
                     if (heroStats) heroStats.classList.add('animate-slide-up');
                 }, 300);
                 
-                // Animate number counters
+                // Animate Counters
                 animateNumberCounters();
                 
-                // Initialize calculator
-                setupAICalculator();
-                
-                // Load saved draft
-                loadOrderDraft();
+                // Init Calculator Logic (但不绑定事件)
+                updateSpeedSelector();
+                calculateAIPrice();
             }, 1500);
             
-            function animateNumberCounters() {
-                const counters = document.querySelectorAll('.stat-number');
-                counters.forEach(counter => {
-                    const target = parseInt(counter.getAttribute('data-count'));
-                    const duration = 2000;
-                    const increment = target / (duration / 16);
-                    let current = 0;
-                    
-                    const updateCounter = () => {
-                        current += increment;
-                        if (current < target) {
-                            if (target % 1 === 0) {
-                                counter.textContent = Math.floor(current);
-                            } else {
-                                counter.textContent = current.toFixed(1);
-                            }
-                            requestAnimationFrame(updateCounter);
-                        } else {
-                            counter.textContent = target % 1 === 0 ? target : target.toFixed(1);
-                        }
-                    };
-                    
-                    updateCounter();
-                });
-            }
-            
-            // ========== PERBAIKAN: MODAL EVENT LISTENERS ==========
-            // Close modal dengan ESC
+            // Bind Buttons to Open Modal
+            const calcBtns = document.querySelectorAll('#calculatorBtn, #heroCalcBtn');
+            calcBtns.forEach(btn => {
+                if(btn) {
+                    btn.addEventListener('click', openOrderModal);
+                }
+            });
+
+            // Modal Event Listeners
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape' && document.getElementById('orderModal').classList.contains('active')) {
                     closeOrderModal();
                 }
             });
             
-            // Close modal dengan klik di luar konten
             document.getElementById('orderModal').addEventListener('click', function(e) {
                 if (e.target === this) {
                     closeOrderModal();
                 }
             });
             
-            // Prevent modal close ketika klik di dalam konten
-            document.querySelectorAll('.modal-content').forEach(content => {
-                content.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                });
-            });
-            
-            // ========== HEADER SCROLL BEHAVIOR ==========
+            // Header Scroll
             let lastScrollTop = 0;
             const header = document.getElementById('mainHeader');
             
             window.addEventListener('scroll', () => {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
-                // Header hide/show on scroll
                 if (scrollTop > lastScrollTop && scrollTop > 100) {
                     header.classList.add('hide');
                 } else {
                     header.classList.remove('hide');
                 }
                 
-                // Header scrolled style
-                if (scrollTop > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
+                if (scrollTop > 50) header.classList.add('scrolled');
+                else header.classList.remove('scrolled');
                 
-                // Back to top button
                 const backToTop = document.getElementById('backToTop');
-                if (scrollTop > 500) {
-                    backToTop.classList.add('visible');
-                } else {
-                    backToTop.classList.remove('visible');
-                }
+                if (scrollTop > 500) backToTop.classList.add('visible');
+                else backToTop.classList.remove('visible');
                 
                 lastScrollTop = scrollTop;
             });
             
-            // ========== THEME SWITCHER ==========
+            // Theme Switcher
             const themeToggle = document.getElementById('themeToggle');
             const themeOptions = document.getElementById('themeOptions');
             
-            themeToggle.addEventListener('click', () => {
+            themeToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
                 themeOptions.classList.toggle('show');
             });
             
-            // Close theme options when clicking outside
             document.addEventListener('click', (e) => {
                 if (!themeToggle.contains(e.target) && !themeOptions.contains(e.target)) {
                     themeOptions.classList.remove('show');
                 }
             });
             
-            // Theme selection
             document.querySelectorAll('.theme-option').forEach(option => {
                 option.addEventListener('click', () => {
                     const theme = option.getAttribute('data-theme');
-                    
-                    // Update active state
-                    document.querySelectorAll('.theme-option').forEach(opt => {
-                        opt.classList.remove('active');
-                    });
+                    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
                     option.classList.add('active');
-                    
-                    // Set theme
                     document.documentElement.setAttribute('data-theme', theme);
-                    
-                    // Save to localStorage
                     localStorage.setItem('theme', theme);
-                    
-                    // Close options
                     themeOptions.classList.remove('show');
-                    
-                    showNotification('Tema berhasil diubah!', 'Tampilan situs telah diperbarui.', 'success');
+                    showNotification('Tema berhasil diubah!', '', 'success');
                 });
             });
             
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            document.querySelector(`.theme-option[data-theme="${savedTheme}"]`).classList.add('active');
+            document.querySelector(`.theme-option[data-theme="${savedTheme}"]`)?.classList.add('active');
             
-            // ========== PERBAIKAN: MOBILE NAVIGATION ==========
+            // Mobile Nav
             const mobileToggle = document.getElementById('mobileToggle');
             const navLinks = document.getElementById('navLinks');
             
@@ -3755,495 +3195,295 @@
                     e.stopPropagation();
                     navLinks.classList.toggle('active');
                     const icon = mobileToggle.querySelector('i');
-                    if (icon.classList.contains('fa-bars')) {
-                        icon.classList.remove('fa-bars');
-                        icon.classList.add('fa-times');
-                    } else {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    }
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
                 });
                 
-                // Close mobile menu when clicking outside
                 document.addEventListener('click', (e) => {
                     if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
                         navLinks.classList.remove('active');
-                        mobileToggle.querySelector('i').classList.remove('fa-times');
-                        mobileToggle.querySelector('i').classList.add('fa-bars');
+                        const icon = mobileToggle.querySelector('i');
+                        icon.classList.add('fa-bars');
+                        icon.classList.remove('fa-times');
                     }
                 });
             }
             
-            // ========== PERBAIKAN: NAV LINK ACTIVE STATE ==========
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    // Update active state
-                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Close mobile menu if open
-                    if (navLinks && navLinks.classList.contains('active')) {
-                        navLinks.classList.remove('active');
-                        if (mobileToggle) {
-                            mobileToggle.querySelector('i').classList.remove('fa-times');
-                            mobileToggle.querySelector('i').classList.add('fa-bars');
-                        }
-                    }
-                });
-            });
-            
-            // ========== BACK TO TOP ==========
+            // Back to Top
             document.getElementById('backToTop').addEventListener('click', () => {
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             });
             
-            // ========== NOTIFICATION SYSTEM ==========
-            window.showNotification = function(title, message, type = 'info') {
-                const notification = document.getElementById('notification');
-                const notificationTitle = document.getElementById('notificationTitle');
-                const notificationMessage = document.getElementById('notificationMessage');
-                const notificationIcon = document.getElementById('notificationIcon');
-                
-                // Set content
-                notificationTitle.textContent = title;
-                notificationMessage.textContent = message;
-                
-                // Set type
-                notification.className = 'notification';
-                notification.classList.add(type);
-                
-                // Set icon
-                let iconClass = 'fas fa-info-circle';
-                if (type === 'success') iconClass = 'fas fa-check-circle';
-                if (type === 'error') iconClass = 'fas fa-exclamation-circle';
-                if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
-                
-                notificationIcon.className = 'notification-icon ' + iconClass;
-                
-                // Show notification
-                notification.classList.add('show');
-                
-                // Auto hide after 5 seconds
-                setTimeout(() => {
-                    hideNotification();
-                }, 5000);
-            };
-            
-            window.hideNotification = function() {
-                document.getElementById('notification').classList.remove('show');
-            };
-            
-            // ========== TESTIMONIALS SYSTEM ==========
-            const testimonials = [
-                {
-                    id: 1,
-                    name: 'Rizki',
-                    role: 'Mahasiswa UI',
-                    rating: 5,
-                    service: 'makalah',
-                    date: '2024-03-15',
-                    content: 'Deadline skripsi tinggal 3 hari, panik banget! Untung ada JOKIINAJA, 2 hari langsung selesai, malah dapet nilai A. Recommended banget!',
-                    tags: ['express']
-                },
-                {
-                    id: 2,
-                    name: 'Sari',
-                    role: 'Mahasiswa UGM',
-                    rating: 5,
-                    service: 'powerpoint',
-                    date: '2024-03-10',
-                    content: 'PPT untuk sidang akhir, desainnya keren banget! Dosen sampe nanya template dari mana. Worth it banget harganya.',
-                    tags: []
-                },
-                {
-                    id: 3,
-                    name: 'Andi',
-                    role: 'Mahasiswa ITB',
-                    rating: 5,
-                    service: 'programming',
-                    date: '2024-03-05',
-                    content: 'Project Python buat tugas akhir, code-nya clean banget, dokumentasi lengkap. Bisa request fitur tambahan juga. Puas!',
-                    tags: ['programming']
-                },
-                {
-                    id: 4,
-                    name: 'Dewi',
-                    role: 'Mahasiswa UNPAD',
-                    rating: 5,
-                    service: 'analisis',
-                    date: '2024-02-28',
-                    content: 'Analisis data pakai SPSS, hasilnya detail banget plus interpretasi yang mudah dipahami. Bantu banget buat yang ga jago statistik kayak aku.',
-                    tags: []
-                },
-                {
-                    id: 5,
-                    name: 'Budi',
-                    role: 'Karyawan & Mahasiswa',
-                    rating: 5,
-                    service: 'makalah',
-                    date: '2024-02-20',
-                    content: 'Sambil kerja full-time, nulis makalah itu berat. Alhamdulillah ada yang bantuin, kualitasnya bagus, revisi juga cepet responsenya.',
-                    tags: ['express']
-                },
-                {
-                    id: 6,
-                    name: 'Nina',
-                    role: 'Mahasiswa UNDIP',
-                    rating: 5,
-                    service: 'powerpoint',
-                    date: '2024-02-15',
-                    content: 'Presentasi kelompok, semua anggota sibuk. Akhirnya patungan pake jasa ini, hasilnya profesional banget! Sekali lagi pasti order.',
-                    tags: []
-                },
-                {
-                    id: 7,
-                    name: 'Rudi',
-                    role: 'Mahasiswa UNS',
-                    rating: 5,
-                    service: 'programming',
-                    date: '2024-02-10',
-                    content: 'Website buat UKM kampus, selesai tepat waktu plus ada hosting dan domain gratis 1 tahun. Mantap pokoknya!',
-                    tags: ['programming']
-                },
-                {
-                    id: 8,
-                    name: 'Maya',
-                    role: 'Mahasiswa UNY',
-                    rating: 5,
-                    service: 'analisis',
-                    date: '2024-02-05',
-                    content: 'Butuh analisis data penelitian buat jurnal, ternyata bisa sekalian dibantu submit ke jurnal juga. Sangat membantu!',
-                    tags: []
-                }
-            ];
-            
-            let currentTestimonialIndex = 0;
-            
-            function renderTestimonials(filter = 'all') {
-                const track = document.getElementById('testimonialsTrack');
-                const currentTestimonial = document.getElementById('currentTestimonial');
-                const totalTestimonials = document.getElementById('totalTestimonials');
-                
-                // Filter testimonials
-                let filteredTestimonials = testimonials;
-                if (filter !== 'all') {
-                    if (filter === '5') {
-                        filteredTestimonials = testimonials.filter(t => t.rating === 5);
-                    } else if (filter === 'express') {
-                        filteredTestimonials = testimonials.filter(t => t.tags.includes('express'));
-                    } else if (filter === 'programming') {
-                        filteredTestimonials = testimonials.filter(t => t.tags.includes('programming'));
-                    }
-                }
-                
-                // Clear track
-                track.innerHTML = '';
-                
-                // Render testimonials
-                filteredTestimonials.forEach(testimonial => {
-                    const testimonialCard = document.createElement('div');
-                    testimonialCard.className = 'testimonial-card-next';
-                    
-                    // Generate stars
-                    let stars = '';
-                    for (let i = 0; i < 5; i++) {
-                        stars += i < testimonial.rating ? '★' : '☆';
-                    }
-                    
-                    testimonialCard.innerHTML = `
-                        <div class="testimonial-content">"${testimonial.content}"</div>
-                        <div class="testimonial-rating">${stars}</div>
-                        <div class="testimonial-author">
-                            <div class="testimonial-avatar">${testimonial.name.charAt(0)}</div>
-                            <div class="testimonial-info">
-                                <h4>${testimonial.name}</h4>
-                                <p>${testimonial.role}</p>
-                                <div class="testimonial-date">${new Date(testimonial.date).toLocaleDateString('id-ID', { 
-                                    year: 'numeric', 
-                                    month: 'long', 
-                                    day: 'numeric' 
-                                })}</div>
-                                ${testimonial.tags.includes('express') ? '<span class="testimonial-badge">⚡ Express Service</span>' : ''}
-                                ${testimonial.tags.includes('programming') ? '<span class="testimonial-badge">💻 Programming</span>' : ''}
-                            </div>
-                        </div>
-                    `;
-                    
-                    track.appendChild(testimonialCard);
-                });
-                
-                // Update counters
-                currentTestimonial.textContent = '1';
-                totalTestimonials.textContent = filteredTestimonials.length;
-                
-                // Reset index
-                currentTestimonialIndex = 0;
-            }
-            
-            window.nextTestimonial = function() {
-                const track = document.getElementById('testimonialsTrack');
-                const currentTestimonial = document.getElementById('currentTestimonial');
-                const totalTestimonials = document.getElementById('totalTestimonials');
-                
-                const total = parseInt(totalTestimonials.textContent);
-                currentTestimonialIndex = (currentTestimonialIndex + 1) % total;
-                
-                // Scroll to next testimonial
-                const cardWidth = track.querySelector('.testimonial-card-next')?.offsetWidth + 32 || 332;
-                track.scrollLeft = currentTestimonialIndex * cardWidth;
-                
-                currentTestimonial.textContent = currentTestimonialIndex + 1;
-            };
-            
-            window.prevTestimonial = function() {
-                const track = document.getElementById('testimonialsTrack');
-                const currentTestimonial = document.getElementById('currentTestimonial');
-                const totalTestimonials = document.getElementById('totalTestimonials');
-                
-                const total = parseInt(totalTestimonials.textContent);
-                currentTestimonialIndex = (currentTestimonialIndex - 1 + total) % total;
-                
-                // Scroll to previous testimonial
-                const cardWidth = track.querySelector('.testimonial-card-next')?.offsetWidth + 32 || 332;
-                track.scrollLeft = currentTestimonialIndex * cardWidth;
-                
-                currentTestimonial.textContent = currentTestimonialIndex + 1;
-            };
-            
-            // Initialize testimonials
+            // Testimonials Initialization
             renderTestimonials();
             
-            // Testimonial filter
+            // Testimonial Filter
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    // Update active button
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
-                    
-                    // Filter testimonials
-                    const filter = btn.getAttribute('data-filter');
-                    renderTestimonials(filter);
+                    renderTestimonials(btn.getAttribute('data-filter'));
                 });
             });
-            
-            // ========== TESTIMONIAL MODAL ==========
-            function openTestimonialModal() {
-                document.getElementById('testimonialModal').classList.add('active');
-                
-                // Initialize rating stars
-                document.querySelectorAll('#testimonialModal .star').forEach(star => {
-                    star.addEventListener('click', function() {
-                        const rating = this.getAttribute('data-rating');
-                        document.getElementById('testimonialRating').value = rating;
-                        
-                        // Update star display
-                        document.querySelectorAll('#testimonialModal .star').forEach(s => {
-                            s.textContent = s.getAttribute('data-rating') <= rating ? '★' : '☆';
-                        });
-                    });
-                });
-            }
-            
-            function closeTestimonialModal() {
-                document.getElementById('testimonialModal').classList.remove('active');
-            }
-            
-            // Testimonial form submission
-            document.getElementById('testimonialForm')?.addEventListener('submit', function(e) {
+
+            // Contact Form
+            document.getElementById('contactForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                const name = document.getElementById('testimonialName').value;
-                const role = document.getElementById('testimonialRole').value;
-                const service = document.getElementById('testimonialService').value;
-                const rating = document.getElementById('testimonialRating').value;
-                const message = document.getElementById('testimonialMessage').value;
-                
-                // Add new testimonial
-                const newTestimonial = {
-                    id: testimonials.length + 1,
-                    name: name,
-                    role: role,
-                    rating: parseInt(rating),
-                    service: service,
-                    date: new Date().toISOString().split('T')[0],
-                    content: message,
-                    tags: service === 'programming' ? ['programming'] : []
-                };
-                
-                testimonials.unshift(newTestimonial);
-                renderTestimonials();
-                
-                // Close modal and reset form
-                closeTestimonialModal();
-                this.reset();
-                
-                // Reset stars
-                document.querySelectorAll('#testimonialModal .star').forEach(s => {
-                    s.textContent = '☆';
-                });
-                document.getElementById('testimonialRating').value = '5';
-                document.querySelector('#testimonialModal .star[data-rating="5"]').textContent = '★';
-                
-                showNotification('Testimoni terkirim!', 'Terima kasih atas ulasan Anda. Ulasan akan muncul setelah moderasi.', 'success');
-            });
-            
-            // ========== CONTACT FORM ==========
-            document.getElementById('contactForm')?.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
                 const name = document.getElementById('name').value;
                 const email = document.getElementById('email').value;
                 const subject = document.getElementById('subject').value;
                 const message = document.getElementById('message').value;
                 
-                // Create email body
                 const emailBody = `Nama: ${name}%0AEmail: ${email}%0ASubjek: ${subject}%0A%0APesan:%0A${message}`;
-                
-                // Open default email client
                 window.open(`mailto:jokiinaja@proton.me?subject=${encodeURIComponent(subject)}&body=${emailBody}`, '_blank');
-                
-                // Reset form
                 this.reset();
-                
-                showNotification('Form terkirim!', 'Email client telah dibuka, silakan lanjutkan pengiriman.', 'success');
+                showNotification('Form terkirim!', 'Email client telah dibuka.', 'success');
             });
-            
-            // ========== ORDER VIA WHATSAPP ==========
-            window.orderViaWhatsApp = function(serviceName, basePrice, unit, isExpress) {
-                let price = isExpress ? basePrice + (serviceName.includes('CEPAT') ? 0 : getExpressFee(serviceName)) : basePrice;
-                let expressText = isExpress ? ' (Express)' : '';
-                
-                const message = `Halo JOKIINAJA, saya ingin order ${serviceName}${expressText}.\n\n` +
-                               `Bisa dibantu untuk detail lebih lanjut?`;
-                
-                const encodedMessage = encodeURIComponent(message);
-                const whatsappUrl = `https://wa.me/6282125283598?text=${encodedMessage}`;
-                
-                window.open(whatsappUrl, '_blank');
-                
-                showNotification('Order diproses!', 'WhatsApp telah dibuka untuk order ' + serviceName, 'success');
-            };
-            
-            function getExpressFee(serviceName) {
-                if (serviceName.includes('Laporan') || serviceName.includes('PowerPoint') || serviceName.includes('Ringkasan')) {
-                    return 35000;
-                } else if (serviceName.includes('Jurnal')) {
-                    return 50000;
-                } else if (serviceName.includes('Programming')) {
-                    return 100000;
-                } else if (serviceName.includes('Analisis')) {
-                    return 75000;
-                }
-                return 0;
-            }
-            
-            // ========== OTHER FUNCTIONS ==========
-            window.showFastServiceInfo = function() {
-                showNotification(
-                    '⚡ Express Service Info',
-                    'Layanan cepat tersedia untuk semua jenis tugas. Biaya tambahan: Makalah/PowerPoint +35K, Jurnal +50K, Programming +100K, Analisis +75K. Pengerjaan 6-12 jam.',
-                    'info'
-                );
-            };
-            
-            window.showPrivacyPolicy = function() {
-                showNotification(
-                    '🔒 Kebijakan Privasi',
-                    'Data Anda aman bersama kami. Tidak ada informasi yang dibagikan ke pihak ketiga. Semua komunikasi dienkripsi.',
-                    'info'
-                );
-            };
-            
-            window.showTerms = function() {
-                showNotification(
-                    '📜 Syarat & Ketentuan',
-                    '1. Revisi gratis tanpa batas\n2. Pembayaran 50% di awal, 50% setelah selesai\n3. Garansi anti plagiasi\n4. Waktu pengerjaan sesuai paket yang dipilih',
-                    'info'
-                );
-            };
-            
-            window.showRefundPolicy = function() {
-                showNotification(
-                    '💸 Kebijakan Pengembalian',
-                    'Pengembalian dana hanya berlaku jika:\n1. Pengerjaan melebihi deadline yang disepakati\n2. Kualitas tidak sesuai dengan contoh\n3. Ada kesalahan dari kami',
-                    'info'
-                );
-            };
-            
-            window.showSecretAdminLogin = function() {
-                showNotification(
-                    '🚫 Akses Ditolak',
-                    'Fitur ini hanya tersedia untuk admin terdaftar. Jika Anda admin, hubungi developer.',
-                    'error'
-                );
-            };
-            
-            // ========== ANIMATION ON SCROLL ==========
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animated');
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe elements for animation
-            document.querySelectorAll('.animate-on-scroll').forEach(el => {
-                observer.observe(el);
-            });
-            
-            // ========== PERBAIKAN: Logo animation on click ==========
+
+            // Logo Animation
             document.getElementById('logoContainer')?.addEventListener('click', function(e) {
                 if (e.target.closest('.logo')) {
                     this.classList.add('animating');
-                    setTimeout(() => {
-                        this.classList.remove('animating');
-                    }, 800);
+                    setTimeout(() => this.classList.remove('animating'), 800);
                 }
             });
-            
-            // ========== PERBAIKAN: MOBILE OPTIMIZATION FUNCTIONS ==========
-            // Prevent horizontal scrolling on mobile
-            document.addEventListener('touchmove', function(e) {
-                if (e.touches.length > 1) e.preventDefault();
-            }, { passive: false });
-            
-            // Close theme options when scrolling
-            window.addEventListener('scroll', function() {
-                const themeOptions = document.getElementById('themeOptions');
-                if (themeOptions && themeOptions.classList.contains('show')) {
-                    themeOptions.classList.remove('show');
-                }
-            });
-            
-            // Adjust header on resize
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    // Close mobile menu jika layar diperbesar
-                    if (window.innerWidth > 768) {
-                        const navLinks = document.getElementById('navLinks');
-                        if (navLinks) navLinks.classList.remove('active');
-                        const mobileToggle = document.getElementById('mobileToggle');
-                        if (mobileToggle) {
-                            mobileToggle.querySelector('i').classList.remove('fa-times');
-                            mobileToggle.querySelector('i').classList.add('fa-bars');
-                        }
-                    }
-                }, 250);
-            });
-            
-            console.log('JOKIINAJA - Semua perbaikan telah diterapkan! 🚀');
         });
+
+        // ========== HELPER FUNCTIONS ==========
+        
+        function animateNumberCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseFloat(counter.getAttribute('data-count'));
+                const duration = 2000;
+                const start = 0;
+                const startTime = performance.now();
+                
+                function update(currentTime) {
+                    const elapsed = currentTime - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    // Ease out quart
+                    const ease = 1 - Math.pow(1 - progress, 4);
+                    
+                    const current = start + (target - start) * ease;
+                    
+                    if (target % 1 === 0) {
+                        counter.textContent = Math.floor(current);
+                    } else {
+                        counter.textContent = current.toFixed(1);
+                    }
+                    
+                    if (progress < 1) requestAnimationFrame(update);
+                    else counter.textContent = target % 1 === 0 ? target : target.toFixed(1);
+                }
+                requestAnimationFrame(update);
+            });
+        }
+        
+        function showNotification(title, message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const notificationTitle = document.getElementById('notificationTitle');
+            const notificationMessage = document.getElementById('notificationMessage');
+            const notificationIcon = document.getElementById('notificationIcon');
+            
+            notificationTitle.textContent = title;
+            notificationMessage.textContent = message || '';
+            notification.className = `notification ${type}`;
+            
+            let iconClass = 'fas fa-info-circle';
+            if (type === 'success') iconClass = 'fas fa-check-circle';
+            if (type === 'error') iconClass = 'fas fa-exclamation-circle';
+            if (type === 'warning') iconClass = 'fas fa-exclamation-triangle';
+            notificationIcon.className = `notification-icon ${iconClass}`;
+            
+            notification.classList.add('show');
+            setTimeout(hideNotification, 5000);
+        }
+        
+        function hideNotification() {
+            document.getElementById('notification').classList.remove('show');
+        }
+        
+        // ========== TESTIMONIALS ==========
+        const testimonials = [
+            {
+                id: 1, name: 'Rizki', role: 'Mahasiswa UI', rating: 5, service: 'makalah', date: '2024-03-15',
+                content: 'Deadline skripsi tinggal 3 hari, panik banget! Untung ada JOKIINAJA, 2 hari langsung selesai, malah dapet nilai A.', tags: ['express']
+            },
+            {
+                id: 2, name: 'Sari', role: 'Mahasiswa UGM', rating: 5, service: 'powerpoint', date: '2024-03-10',
+                content: 'PPT untuk sidang akhir, desainnya keren banget! Dosen sampe nanya template dari mana. Worth it banget harganya.', tags: []
+            },
+            {
+                id: 3, name: 'Andi', role: 'Mahasiswa ITB', rating: 5, service: 'programming', date: '2024-03-05',
+                content: 'Project Python buat tugas akhir, code-nya clean banget, dokumentasi lengkap. Bisa request fitur tambahan juga.', tags: ['programming']
+            },
+            {
+                id: 4, name: 'Dewi', role: 'Mahasiswa UNPAD', rating: 5, service: 'analisis', date: '2024-02-28',
+                content: 'Analisis data pakai SPSS, hasilnya detail banget plus interpretasi yang mudah dipahami.', tags: []
+            },
+            {
+                id: 5, name: 'Budi', role: 'Karyawan & Mahasiswa', rating: 5, service: 'makalah', date: '2024-02-20',
+                content: 'Sambil kerja full-time, nulis makalah itu berat. Alhamdulillah ada yang bantuin.', tags: ['express']
+            },
+            {
+                id: 6, name: 'Nina', role: 'Mahasiswa UNDIP', rating: 5, service: 'powerpoint', date: '2024-02-15',
+                content: 'Presentasi kelompok, semua anggota sibuk. Akhirnya patungan pake jasa ini, hasilnya profesional!', tags: []
+            },
+            {
+                id: 7, name: 'Rudi', role: 'Mahasiswa UNS', rating: 5, service: 'programming', date: '2024-02-10',
+                content: 'Website buat UKM kampus, selesai tepat waktu plus ada hosting dan domain gratis 1 tahun.', tags: ['programming']
+            },
+            {
+                id: 8, name: 'Maya', role: 'Mahasiswa UNY', rating: 5, service: 'analisis', date: '2024-02-05',
+                content: 'Butuh analisis data penelitian buat jurnal, ternyata bisa sekalian dibantu submit ke jurnal juga.', tags: []
+            }
+        ];
+        
+        let currentTestimonialIndex = 0;
+        
+        function renderTestimonials(filter = 'all') {
+            const track = document.getElementById('testimonialsTrack');
+            const currentEl = document.getElementById('currentTestimonial');
+            const totalEl = document.getElementById('totalTestimonials');
+            
+            let filtered = testimonials;
+            if (filter !== 'all') {
+                if (filter === '5') filtered = testimonials.filter(t => t.rating === 5);
+                else if (filter === 'express') filtered = testimonials.filter(t => t.tags.includes('express'));
+                else if (filter === 'programming') filtered = testimonials.filter(t => t.tags.includes('programming'));
+            }
+            
+            track.innerHTML = '';
+            filtered.forEach(t => {
+                const card = document.createElement('div');
+                card.className = 'testimonial-card-next';
+                let stars = '';
+                for(let i=0; i<5; i++) stars += i < t.rating ? '★' : '☆';
+                
+                card.innerHTML = `
+                    <div class="testimonial-content">"${t.content}"</div>
+                    <div class="testimonial-rating">${stars}</div>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">${t.name.charAt(0)}</div>
+                        <div class="testimonial-info">
+                            <h4>${t.name}</h4>
+                            <p>${t.role}</p>
+                            <div class="testimonial-date">${new Date(t.date).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                            ${t.tags.includes('express') ? '<span class="testimonial-badge">⚡ Express</span>' : ''}
+                            ${t.tags.includes('programming') ? '<span class="testimonial-badge">💻 Programming</span>' : ''}
+                        </div>
+                    </div>
+                `;
+                track.appendChild(card);
+            });
+            
+            currentEl.textContent = '1';
+            totalEl.textContent = filtered.length;
+            currentTestimonialIndex = 0;
+        }
+        
+        window.nextTestimonial = function() {
+            const track = document.getElementById('testimonialsTrack');
+            const total = parseInt(document.getElementById('totalTestimonials').textContent);
+            if (total === 0) return;
+            
+            currentTestimonialIndex = (currentTestimonialIndex + 1) % total;
+            const cardWidth = track.querySelector('.testimonial-card-next')?.offsetWidth + 32 || 332;
+            track.scrollLeft = currentTestimonialIndex * cardWidth;
+            document.getElementById('currentTestimonial').textContent = currentTestimonialIndex + 1;
+        }
+        
+        window.prevTestimonial = function() {
+            const track = document.getElementById('testimonialsTrack');
+            const total = parseInt(document.getElementById('totalTestimonials').textContent);
+            if (total === 0) return;
+            
+            currentTestimonialIndex = (currentTestimonialIndex - 1 + total) % total;
+            const cardWidth = track.querySelector('.testimonial-card-next')?.offsetWidth + 32 || 332;
+            track.scrollLeft = currentTestimonialIndex * cardWidth;
+            document.getElementById('currentTestimonial').textContent = currentTestimonialIndex + 1;
+        }
+        
+        // Testimonial Modal
+        window.openTestimonialModal = function() {
+            const modal = document.getElementById('testimonialModal');
+            modal.style.display = 'flex';
+            void modal.offsetWidth;
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
+        
+        window.closeTestimonialModal = function() {
+            const modal = document.getElementById('testimonialModal');
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+            setTimeout(() => {
+                if (!modal.classList.contains('active')) modal.style.display = 'none';
+            }, 300);
+        }
+        
+        // Submit Testimonial
+        window.submitTestimonialForm = function() {
+            const name = document.getElementById('testimonialName').value;
+            const role = document.getElementById('testimonialRole').value;
+            const service = document.getElementById('testimonialService').value;
+            const rating = document.getElementById('testimonialRating').value;
+            const message = document.getElementById('testimonialMessage').value;
+            
+            if(!name || !role || !service || !message) {
+                showNotification('Error', 'Mohon lengkapi semua field', 'error');
+                return;
+            }
+            
+            const newTest = {
+                id: testimonials.length + 1, name, role, rating: parseInt(rating), service, date: new Date().toISOString().split('T')[0], content: message,
+                tags: service === 'programming' ? ['programming'] : []
+            };
+            testimonials.unshift(newTest);
+            renderTestimonials();
+            closeTestimonialModal();
+            document.getElementById('testimonialForm').reset();
+            showNotification('Testimoni terkirim!', 'Terima kasih atas ulasan Anda.', 'success');
+        }
+        
+        // Rating Stars Interaction
+        document.querySelectorAll('#testimonialModal .star').forEach(star => {
+            star.addEventListener('click', function() {
+                const r = this.getAttribute('data-rating');
+                document.getElementById('testimonialRating').value = r;
+                document.querySelectorAll('#testimonialModal .star').forEach(s => {
+                    s.textContent = s.getAttribute('data-rating') <= r ? '★' : '☆';
+                });
+            });
+        });
+
+        // WhatsApp Order Helper
+        window.orderViaWhatsApp = function(service, price, unit, express) {
+            let finalPrice = express ? price + getExpressFee(service) : price;
+            let msg = `Halo, saya mau order ${service}${express?' (Express)':''}.\nEstimasi: Rp ${finalPrice.toLocaleString()}`;
+            window.open(`https://wa.me/6282125283598?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+        
+        function getExpressFee(s) {
+            if(s.includes('Laporan') || s.includes('PowerPoint')) return 35000;
+            if(s.includes('Jurnal')) return 50000;
+            if(s.includes('Programming')) return 100000;
+            if(s.includes('Analisis')) return 75000;
+            return 0;
+        }
+        
+        window.showFastServiceInfo = function() {
+            showNotification('Info Express', 'Biaya tambahan bervariasi tergantung jenis tugas (35K-100K).', 'info');
+        }
+        
+        window.showPrivacyPolicy = window.showTerms = window.showRefundPolicy = function() {
+            showNotification('Info Legal', 'Halaman legal detail sedang disiapkan.', 'info');
+        }
+        
+        window.showSecretAdminLogin = function() {
+            showNotification('Akses Ditolak', 'Area khusus admin.', 'error');
+        }
     </script>
 </body>
 </html>
