@@ -40,7 +40,8 @@
             --gradient-secondary: linear-gradient(135deg, #06b6d4, #10b981);
             --gradient-accent: linear-gradient(135deg, #f59e0b, #ef4444);
             
-            --header-height: 80px;
+            /* PERUBAHAN: Header lebih kecil */
+            --header-height: 65px;
             --border-radius: 16px;
             --border-radius-lg: 24px;
             --border-radius-xl: 32px;
@@ -103,7 +104,7 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: var(--header-height);
+            scroll-padding-top: calc(var(--header-height) + 10px);
             overflow-x: hidden;
             width: 100%;
             max-width: 100vw;
@@ -118,6 +119,7 @@
             transition: all var(--transition-slow);
             min-height: 100vh;
             width: 100%;
+            padding-top: var(--header-height);
         }
 
         ::selection {
@@ -212,23 +214,64 @@
             border-radius: 2px;
         }
 
+        /* === HEADER YANG DIPERBAIKI === */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            transition: all var(--transition-slow);
+            height: var(--header-height);
+            max-height: 65px;
+            overflow: hidden;
+        }
+
+        header.hide {
+            transform: translateY(-100%);
+        }
+
+        header.scrolled {
+            background: var(--bg-glass);
+            box-shadow: var(--shadow);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: var(--header-height);
+            padding: 0 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+            overflow: visible;
+        }
+
+        /* Logo yang lebih kecil */
         .logo-container {
             position: relative;
             perspective: 1000px;
+            flex-shrink: 0;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
             text-decoration: none;
             font-weight: 800;
-            font-size: 1.75rem;
+            font-size: 1.4rem;
             color: var(--text-primary);
             transition: all var(--transition-slow);
             position: relative;
-            padding: 0.5rem;
-            border-radius: 12px;
+            padding: 0.35rem;
+            border-radius: 10px;
             overflow: hidden;
         }
 
@@ -238,25 +281,25 @@
         }
 
         .logo-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             position: relative;
             z-index: 2;
             transition: all var(--transition-slow);
             background: linear-gradient(45deg, var(--theme-color-1), var(--theme-color-2));
             color: white;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
         .logo-text {
             display: flex;
             flex-direction: column;
-            line-height: 1.2;
+            line-height: 1.1;
             position: relative;
             z-index: 2;
         }
@@ -268,13 +311,14 @@
             background-clip: text;
             color: transparent;
             transition: all var(--transition-slow);
+            font-size: 1.1rem;
         }
 
         .logo-sub {
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 600;
             color: var(--text-muted);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.4px;
             transition: all var(--transition-slow);
         }
 
@@ -318,19 +362,29 @@
             50% { text-shadow: 0 0 20px var(--theme-color-1); }
         }
 
-        .theme-switcher {
-            position: relative;
+        /* Header controls lebih kompak */
+        .header-controls {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            flex-shrink: 0;
         }
 
+        /* Tombol Kalkulator AI lebih kecil */
+        .btn.btn-primary.btn-sm {
+            padding: 0.6rem 0.9rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            min-height: 42px;
+        }
+
+        /* Theme toggle lebih kecil */
         .theme-toggle {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -358,7 +412,7 @@
         }
 
         .theme-toggle:hover {
-            transform: rotate(15deg) scale(1.1);
+            transform: rotate(15deg) scale(1.05);
             color: var(--primary);
         }
 
@@ -366,10 +420,89 @@
             position: relative;
             z-index: 1;
             transition: transform var(--transition-normal);
+            font-size: 1rem;
         }
 
         .theme-toggle:hover i {
             transform: rotate(15deg);
+        }
+
+        /* Mobile toggle lebih kecil */
+        .mobile-toggle {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-fast);
+            flex-shrink: 0;
+        }
+
+        .mobile-toggle:hover {
+            background: var(--bg-tertiary);
+            transform: rotate(90deg);
+        }
+
+        /* Nav links yang lebih rapat */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all var(--transition-fast);
+            position: relative;
+            padding: 0.35rem 0;
+            white-space: nowrap;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: var(--transition-normal);
+            border-radius: 1px;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .theme-switcher {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .theme-options {
@@ -475,113 +608,6 @@
             flex-direction: column;
             gap: 0.5rem;
             width: 100%;
-        }
-
-        /* === HEADER === */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-light);
-            transition: all var(--transition-slow);
-            height: var(--header-height);
-        }
-
-        header.hide {
-            transform: translateY(-100%);
-        }
-
-        header.scrolled {
-            background: var(--bg-glass);
-            box-shadow: var(--shadow);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: var(--header-height);
-            padding: 0 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all var(--transition-fast);
-            position: relative;
-            padding: 0.5rem 0;
-        }
-
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-primary);
-            transition: var(--transition-normal);
-            border-radius: 1px;
-        }
-
-        .nav-link:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-link:hover::after {
-            width: 100%;
-        }
-
-        .nav-link.active {
-            color: var(--primary);
-        }
-
-        .nav-link.active::after {
-            width: 100%;
-        }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition-fast);
-        }
-
-        .mobile-toggle:hover {
-            background: var(--bg-tertiary);
-            transform: rotate(90deg);
         }
 
         /* === BUTTON STYLES === */
@@ -718,8 +744,9 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            padding-top: var(--header-height);
+            padding-top: 0;
             width: 100%;
+            margin-top: calc(var(--header-height) * -1);
         }
 
         .hero-background {
@@ -1835,7 +1862,6 @@
         }
 
         /* === KALKULATOR AI RESPONSIVE STYLES === */
-        /* Perbaikan ukuran kalkulator saja */
         .modal#orderModal .modal-content {
             max-width: 500px;
             width: 90%;
@@ -1937,50 +1963,158 @@
             padding: 0 1.25rem;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .modal#orderModal .modal-content {
-                width: 95%;
-                padding: 1.5rem;
-                max-height: 80vh;
-            }
-            
-            .modal#orderModal .price-amount {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .modal#orderModal .modal-content {
-                padding: 1.25rem;
-                max-height: 75vh;
-            }
-            
-            .modal#orderModal .price-amount {
-                font-size: 1.75rem;
-            }
-            
-            .modal#orderModal .modal-title {
-                font-size: 1.25rem;
-            }
-            
-            .modal#orderModal .form-control {
-                padding: 0.75rem;
-            }
-        }
-
-        /* === MEDIA QUERIES === */
+        /* === MEDIA QUERIES UNTUK HEADER MOBILE === */
         @media (max-width: 1024px) {
-            .testimonial-card-next {
-                flex: 0 0 calc(50% - 1rem);
+            .nav-links {
+                gap: 1.25rem;
             }
             
-            .container {
-                max-width: 100%;
+            .nav-link {
+                font-size: 0.85rem;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+            
+            .logo-main {
+                font-size: 1rem;
             }
         }
 
         @media (max-width: 768px) {
+            :root {
+                --header-height: 58px;
+            }
+            
+            header {
+                max-height: 58px;
+            }
+            
+            .nav-container {
+                padding: 0 0.8rem;
+            }
+            
+            .logo {
+                font-size: 1.1rem;
+                gap: 0.4rem;
+            }
+            
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+                border-radius: 8px;
+            }
+            
+            .logo-main {
+                font-size: 0.9rem;
+            }
+            
+            .logo-sub {
+                font-size: 0.55rem;
+            }
+            
+            /* Sembunyikan nav links di mobile */
+            .nav-links {
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                width: 100%;
+                background: var(--bg-card);
+                flex-direction: column;
+                padding: 0;
+                gap: 0;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all var(--transition-normal);
+                box-shadow: var(--shadow);
+                border-top: 1px solid var(--border);
+                z-index: 999;
+                max-height: calc(100vh - var(--header-height));
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .nav-link {
+                padding: 1rem 1.5rem;
+                width: 100%;
+                border-bottom: 1px solid var(--border-light);
+                font-size: 0.95rem;
+            }
+
+            .nav-link:last-child {
+                border-bottom: none;
+            }
+            
+            /* Header controls mobile */
+            .header-controls {
+                gap: 0.5rem;
+            }
+            
+            /* Tombol Kalkulator AI hanya icon di mobile */
+            .btn.btn-primary.btn-sm .btn-text {
+                display: none;
+            }
+            
+            .btn.btn-primary.btn-sm {
+                padding: 0.5rem;
+                width: 42px;
+                height: 42px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .btn.btn-primary.btn-sm i {
+                margin: 0;
+                font-size: 1.1rem;
+            }
+            
+            /* Theme toggle mobile */
+            .theme-toggle {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .theme-toggle i {
+                font-size: 0.9rem;
+            }
+            
+            /* Mobile toggle muncul */
+            .mobile-toggle {
+                display: flex;
+            }
+            
+            /* Theme options position mobile */
+            .theme-options {
+                position: fixed;
+                top: var(--header-height);
+                right: 0.8rem;
+                left: auto;
+                bottom: auto;
+                transform-origin: top right;
+            }
+            
+            /* Adjust hero untuk header yang lebih kecil */
+            .hero {
+                padding-top: 0;
+            }
+            
             .container {
                 padding: 0 1.5rem;
                 max-width: 100%;
@@ -1994,58 +2128,26 @@
                 padding: 0 1rem;
             }
 
-            .nav-links {
-                position: fixed;
-                top: var(--header-height);
-                left: 0;
-                width: 100%;
-                background: var(--bg-card);
+            .hero-title {
+                font-size: 1.8rem;
+                line-height: 1.2;
+                margin-bottom: 1rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 2rem;
+            }
+
+            .btn-group {
                 flex-direction: column;
-                padding: 2rem;
-                gap: 0;
-                transform: translateY(-100%);
-                opacity: 0;
-                visibility: hidden;
-                transition: all var(--transition-normal);
-                box-shadow: var(--shadow);
-                border-top: 1px solid var(--border);
-                z-index: 999;
+                gap: 0.75rem;
             }
 
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-                visibility: visible;
-            }
-
-            .nav-link {
-                padding: 1rem 0;
+            .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
                 width: 100%;
-                border-bottom: 1px solid var(--border-light);
-            }
-
-            .nav-link:last-child {
-                border-bottom: none;
-            }
-
-            .mobile-toggle {
-                display: flex;
-            }
-
-            .theme-options {
-                position: fixed;
-                top: var(--header-height);
-                right: 2rem;
-                left: auto;
-                bottom: auto;
-            }
-
-            .hero-stats {
-                gap: 2rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
             }
 
             .testimonial-card-next {
@@ -2096,22 +2198,92 @@
         }
 
         @media (max-width: 480px) {
+            :root {
+                --header-height: 55px;
+            }
+            
+            header {
+                max-height: 55px;
+            }
+            
+            .nav-container {
+                padding: 0 0.7rem;
+            }
+            
+            /* Logo lebih minimalis */
+            .logo {
+                font-size: 1rem;
+                gap: 0.35rem;
+            }
+            
+            .logo-icon {
+                width: 34px;
+                height: 34px;
+                font-size: 1.1rem;
+            }
+            
+            .logo-main {
+                font-size: 0.85rem;
+            }
+            
+            .logo-sub {
+                font-size: 0.5rem;
+                letter-spacing: 0.3px;
+            }
+            
+            /* Header controls mobile kecil */
+            .header-controls {
+                gap: 0.4rem;
+            }
+            
+            .btn.btn-primary.btn-sm {
+                width: 38px;
+                height: 38px;
+                padding: 0.4rem;
+            }
+            
+            .btn.btn-primary.btn-sm i {
+                font-size: 1rem;
+            }
+            
+            .theme-toggle {
+                width: 38px;
+                height: 38px;
+            }
+            
+            .mobile-toggle {
+                width: 38px;
+                height: 38px;
+                font-size: 1.1rem;
+            }
+            
+            /* Theme options untuk layar kecil */
+            .theme-options {
+                right: 0.7rem;
+            }
+            
+            .theme-option {
+                width: 32px;
+                height: 32px;
+                font-size: 0.8rem;
+            }
+
             .container {
                 padding: 0 1rem;
             }
 
             .hero-title {
-                font-size: 2rem;
+                font-size: 1.5rem;
                 line-height: 1.2;
             }
 
             .hero-subtitle {
-                font-size: 1rem;
-                padding: 0 1rem;
+                font-size: 0.8rem;
+                padding: 0 0.5rem;
             }
 
             .contact-form {
-                padding: 2rem 1.5rem;
+                padding: 1.5rem;
             }
 
             .modal-content {
@@ -2131,6 +2303,19 @@
             
             .cards-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        /* Fix untuk iPhone dengan notch */
+        @supports (padding: max(0px)) {
+            header {
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+            
+            .nav-container {
+                padding-left: max(0.8rem, env(safe-area-inset-left));
+                padding-right: max(0.8rem, env(safe-area-inset-right));
             }
         }
     </style>
@@ -2160,7 +2345,7 @@
         </div>
     </div>
 
-    <!-- Header -->
+    <!-- Header yang diperbaiki -->
     <header id="mainHeader">
         <div class="nav-container">
             <div class="logo-container" id="logoContainer">
@@ -2201,8 +2386,9 @@
                     </div>
                 </div>
                 
-                <button class="btn btn-primary btn-sm" onclick="openOrderModal()">
-                    <i class="fas fa-robot"></i> Kalkulator AI
+                <button class="btn btn-primary btn-sm" onclick="openOrderModal()" id="calculatorBtn">
+                    <i class="fas fa-robot"></i>
+                    <span class="btn-text">Kalkulator AI</span>
                 </button>
                 
                 <button class="mobile-toggle" id="mobileToggle">
@@ -2791,6 +2977,7 @@
                         <button type="button" class="btn btn-outline" onclick="applyCoupon()" style="white-space: nowrap;">
                             Terapkan
                         </button>
+                    </div>
                 </div>
                 
                 <div class="price-preview">
@@ -3868,6 +4055,36 @@
                         this.classList.remove('animating');
                     }, 800);
                 }
+            });
+            
+            // ========== MOBILE OPTIMIZATION FUNCTIONS ==========
+            // Prevent horizontal scrolling on mobile
+            document.addEventListener('touchmove', function(e) {
+                if (e.touches.length > 1) e.preventDefault();
+            }, { passive: false });
+            
+            // Close theme options when scrolling
+            window.addEventListener('scroll', function() {
+                const themeOptions = document.getElementById('themeOptions');
+                if (themeOptions.classList.contains('show')) {
+                    themeOptions.classList.remove('show');
+                }
+            });
+            
+            // Adjust header on resize
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function() {
+                    // Close mobile menu jika layar diperbesar
+                    if (window.innerWidth > 768) {
+                        const navLinks = document.getElementById('navLinks');
+                        navLinks.classList.remove('active');
+                        const mobileToggle = document.getElementById('mobileToggle');
+                        mobileToggle.querySelector('i').classList.remove('fa-times');
+                        mobileToggle.querySelector('i').classList.add('fa-bars');
+                    }
+                }, 250);
             });
             
             console.log('JOKIINAJA - Kalkulator AI siap digunakan! 🚀');
