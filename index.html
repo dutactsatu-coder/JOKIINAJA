@@ -20,31 +20,8 @@
             --danger: #ef4444;
             --info: #0ea5e9;
             
-            --bg-primary: #0f172a;
-            --bg-secondary: #1e293b;
-            --bg-tertiary: #334155;
-            --bg-glass: rgba(30, 41, 59, 0.7);
-            --bg-card: rgba(30, 41, 59, 0.5);
-            
-            --text-primary: #f1f5f9;
-            --text-secondary: #cbd5e1;
-            --text-muted: #94a3b8;
-            
-            --border: rgba(148, 163, 184, 0.2);
-            --border-light: rgba(148, 163, 184, 0.1);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.7);
-            --shadow-primary: 0 0 20px rgba(59, 130, 246, 0.3);
-            
-            --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --gradient-secondary: linear-gradient(135deg, #06b6d4, #10b981);
-            --gradient-accent: linear-gradient(135deg, #f59e0b, #ef4444);
-            
-            /* PERBAIKAN PASTI: Header Height & Scroll Offset */
-            /* Kita set fixed tinggi header, jangan diubah oleh media query agar scroll stabil */
+            /* --- FIX HEADER & SCROLL --- */
             --header-height: 70px; 
-            
-            /* Scroll offset lebih besar dari header + buffer */
             --scroll-offset: calc(var(--header-height) + 40px);
 
             --border-radius: 16px;
@@ -55,10 +32,85 @@
             --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             
+            /* Default (Dark Theme Base) */
             --theme-color-1: #3b82f6;
             --theme-color-2: #8b5cf6;
         }
 
+        /* === TEMA MALAM (GALAXY THEME) === */
+        [data-theme="dark"] {
+            /* Background: Deep Space Blue */
+            --bg-primary: #0B1026; 
+            --bg-secondary: #151836; /* Slightly lighter blue for contrast */
+            --bg-tertiary: #1E2348;   /* For cards/inputs */
+            
+            /* Glass Effect with Galaxy Tint */
+            --bg-glass: rgba(11, 16, 38, 0.85); 
+            --bg-card: rgba(30, 35, 72, 0.6); 
+            
+            /* Text: Starlight White */
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            /* Border: Subtle Blue-Glow */
+            --border: rgba(139, 92, 246, 0.15);
+            --border-light: rgba(139, 92, 246, 0.05);
+            
+            /* Shadow: Neon Glow */
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.7);
+            --shadow-primary: 0 0 20px rgba(59, 130, 246, 0.4);
+            
+            /* Galaxy Accents */
+            --theme-color-1: #60A5FA; /* Light Blue */
+            --theme-color-2: #A78BFA; /* Light Purple */
+            
+            /* Gradients for Galaxy feel */
+            --gradient-primary: linear-gradient(135deg, #60A5FA, #A78BFA);
+            --gradient-secondary: linear-gradient(135deg, #A78BFA, #F472B6); /* Purple to Pink */
+        }
+
+        /* === TEMA REDUP (LIGHT - DARKENED / GREY SCALE) === */
+        [data-theme="dim"] {
+            /* Inspired by Light Theme but Darker */
+            /* Base: Soft Dark Grey (Darker than previous grey) */
+            --bg-primary: #18181b; /* Zinc 900 */
+            
+            /* Secondary: Slightly lighter grey (seamless transition) */
+            --bg-secondary: #27272a; /* Zinc 800 */
+            
+            /* Tertiary: Medium Grey (for cards/inputs) */
+            --bg-tertiary: #3f3f46;  /* Zinc 700 */
+            
+            /* Glass Effect Dark Grey */
+            --bg-glass: rgba(39, 39, 42, 0.85);
+            --bg-card: rgba(63, 63, 70, 0.6);
+            
+            /* Text: Off-white & Zinc 300 for readability */
+            --text-primary: #f4f4f5; /* Zinc 100 */
+            --text-secondary: #d4d4d8; /* Zinc 300 */
+            --text-muted: #a1a1aa;   /* Zinc 400 */
+            
+            /* Border: Subtle Grey/White with low opacity */
+            --border: rgba(255, 255, 255, 0.08);
+            --border-light: rgba(255, 255, 255, 0.04);
+            
+            /* Shadow: Soft Black */
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+            --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.8);
+            --shadow-primary: 0 0 25px rgba(255, 255, 255, 0.05);
+            
+            /* Accent Colors for Contrast on Grey */
+            --theme-color-1: #38bdf8; /* Sky Blue */
+            --theme-color-2: #818cf8; /* Indigo */
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #38bdf8, #818cf8);
+            --gradient-secondary: linear-gradient(135deg, #818cf8, #c084fc);
+        }
+
+        /* === TEMA TERANG (LIGHT) === */
         [data-theme="light"] {
             --bg-primary: #f8fafc;
             --bg-secondary: #ffffff;
@@ -78,27 +130,9 @@
             
             --theme-color-1: #2563eb;
             --theme-color-2: #7c3aed;
-        }
-
-        [data-theme="dim"] {
-            --bg-primary: #1a202c;
-            --bg-secondary: #2d3748;
-            --bg-tertiary: #4a5568;
-            --bg-glass: rgba(45, 55, 72, 0.7);
-            --bg-card: rgba(45, 55, 72, 0.5);
             
-            --text-primary: #e2e8f0;
-            --text-secondary: #a0aec0;
-            --text-muted: #718096;
-            
-            --border: rgba(160, 174, 192, 0.3);
-            --border-light: rgba(160, 174, 192, 0.15);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-            --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.6);
-            --shadow-primary: 0 0 20px rgba(59, 130, 246, 0.25);
-            
-            --theme-color-1: #4299e1;
-            --theme-color-2: #9f7aea;
+            --gradient-primary: linear-gradient(135deg, #2563eb, #7c3aed);
+            --gradient-secondary: linear-gradient(135deg, #06b6d4, #10b981);
         }
 
         * {
@@ -108,7 +142,6 @@
         }
 
         html {
-            /* PERBAIKAN: Kunci scroll padding agar section tidak tertutup header */
             scroll-behavior: smooth;
             scroll-padding-top: var(--scroll-offset);
             overflow-x: hidden;
@@ -121,20 +154,16 @@
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
-            transition: all var(--transition-slow);
+            transition: background-color var(--transition-slow), color var(--transition-slow);
             min-height: 100vh;
             width: 100%;
-            /* PERBAIKAN: Hapus padding-top body agar tidak ada white space aneh di atas */
         }
 
-        /* PERBAIKAN: Anchor offset manual untuk elemen section */
         section {
-            /* Memastikan scroll stop memberi jarak aman dari header */
             scroll-margin-top: var(--scroll-offset); 
             position: relative;
         }
 
-        /* Khusus Hero Section: Kita tambahkan padding top visual agar teks tidak menempel atap */
         #home.hero {
             padding-top: var(--header-height); 
         }
@@ -165,6 +194,7 @@
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 1rem;
+            letter-spacing: -0.5px; /* PERBAIKAN: Letter spacing lebih rapat */
         }
 
         h1 {
@@ -182,6 +212,7 @@
         p {
             margin-bottom: 1rem;
             color: var(--text-secondary);
+            letter-spacing: 0.2px;
         }
 
         .gradient-text {
@@ -201,7 +232,7 @@
         }
 
         .section {
-            padding: 4rem 0 6rem 0;
+            padding: 5rem 0 6rem 0; /* PERBAIKAN: Padding top sedikit lebih long */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -230,20 +261,18 @@
             border-radius: 2px;
         }
 
-        /* === HEADER YANG DIPERBAIKI === */
+        /* === HEADER === */
         header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            /* Z-index cukup 1000, lebih tinggi dari konten normal */
             z-index: 1000; 
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-light);
             transition: all var(--transition-slow);
-            /* PERBAIKAN: Gunakan var(--header-height) yang sudah dikunci di root */
             height: var(--header-height); 
             display: flex;
             align-items: center;
@@ -565,18 +594,19 @@
             box-shadow: 0 0 10px var(--primary);
         }
 
-        .theme-option.dark { background: #0f172a; color: #f1f5f9; }
-        .theme-option.dim { background: #1a202c; color: #e2e8f0; }
-        .theme-option.light { background: #f8fafc; color: #1e293b; }
+        .theme-option.dark { background: #0B1026; color: #60A5FA; }
+        .theme-option.dim { background: #18181b; color: #38bdf8; }
+        .theme-option.light { background: #f8fafc; color: #2563eb; }
 
         .card-badge-container {
             position: relative;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem; /* PERBAIKAN: Margin bawah lebih jauh untuk badge */
+            margin-top: 0.5rem;   /* PERBAIKAN: Margin atas sedikit */
         }
 
         .card-badge {
             position: absolute;
-            top: -15px;
+            top: -25px; /* PERBAIKAN: Naikkan posisi badge agar tidak tabrakan judul */
             right: 0;
             background: linear-gradient(45deg, #f59e0b, #f97316);
             color: white;
@@ -758,7 +788,6 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            /* Padding top diatur di selector spesifik #home.hero */
             width: 100%;
         }
 
@@ -851,7 +880,8 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--border-radius-lg);
-            padding: 2.5rem 2rem;
+            padding: 2.5rem 2rem; /* PERBAIKAN: Padding atas cukup untuk badge */
+            padding-top: 3.5rem; /* PERBAIKAN: Padding atas khusus */
             transition: all var(--transition-slow);
             position: relative;
             overflow: hidden;
@@ -860,6 +890,8 @@
             flex-direction: column;
             margin: 0 auto;
             max-width: 100%;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .card::before {
@@ -902,11 +934,16 @@
             font-size: 1.5rem;
             margin-bottom: 1rem;
             color: var(--text-primary);
+            /* PERBAIKAN: Menghindari teks berantakan */
+            word-wrap: break-word;
+            hyphens: auto;
         }
 
         .card-description {
             color: var(--text-secondary);
             margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         .card-price {
@@ -1088,6 +1125,7 @@
             transition: all var(--transition-normal);
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .testimonial-card-next:hover {
@@ -1585,10 +1623,10 @@
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            display: none; /* Default hidden */
+            display: none;
             align-items: center;
             justify-content: center;
-            z-index: 2000; /* Di atas header */
+            z-index: 2000;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
@@ -1600,7 +1638,7 @@
         .modal.active {
             opacity: 1;
             visibility: visible;
-            display: flex; /* Flex saat aktif */
+            display: flex;
         }
 
         .modal-content {
@@ -1828,15 +1866,6 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        * {
-            transition: background-color var(--transition-slow),
-                        border-color var(--transition-slow),
-                        color var(--transition-slow),
-                        box-shadow var(--transition-slow);
-        }
-
-        .no-transition * { transition: none !important; }
-
         /* === RATING STARS === */
         .rating-stars { display: flex; gap: 0.5rem; font-size: 1.5rem; color: #f59e0b; }
         .rating-stars .star { cursor: pointer; transition: all 0.2s; }
@@ -1881,7 +1910,6 @@
             .modal-close { width: 40px; height: 40px; top: 0.5rem; right: 0.5rem; }
             
             /* PERBAIKAN RESPONSIVE HEADER */
-            /* Header tetap menggunakan var(--header-height) tapi layout disesuaikan */
             header { height: var(--header-height); }
             .nav-container { padding: 0 0.8rem; height: var(--header-height); }
             
@@ -1940,7 +1968,6 @@
         }
 
         @media (max-width: 480px) {
-            /* PERBAIKAN: Pada layar sangat kecil, kita sesuaikan padding container saja */
             .container { padding: 0 1rem; }
             .hero-title { font-size: 1.5rem; line-height: 1.2; }
             .hero-subtitle { font-size: 0.8rem; padding: 0 0.5rem; }
@@ -2029,10 +2056,10 @@
                         <i class="fas fa-palette"></i>
                     </div>
                     <div class="theme-options" id="themeOptions">
-                        <div class="theme-option dark active" data-theme="dark" title="Mode Gelap">
+                        <div class="theme-option dark active" data-theme="dark" title="Mode Malam (Galaxy)">
                             <i class="fas fa-moon"></i>
                         </div>
-                        <div class="theme-option dim" data-theme="dim" title="Mode Redup">
+                        <div class="theme-option dim" data-theme="dim" title="Mode Redup (Soft Grey)">
                             <i class="fas fa-adjust"></i>
                         </div>
                         <div class="theme-option light" data-theme="light" title="Mode Terang">
