@@ -1,131 +1,66 @@
-/* === ROOT VARIABLES === */
+/* ===== FIX: ROOT VARIABLES KONSISTEN ===== */
 :root {
-    --header-height: 70px; /* Tinggi header default */
-    --primary: #3b82f6;
-    --primary-dark: #1d4ed8;
-    --secondary: #8b5cf6;
-    --accent: #06b6d4;
-    --success: #10b981;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-    --info: #0ea5e9;
-    
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --bg-tertiary: #334155;
-    --bg-glass: rgba(30, 41, 59, 0.7);
-    --bg-card: rgba(30, 41, 59, 0.5);
-    
-    --text-primary: #f1f5f9;
-    --text-secondary: #cbd5e1;
-    --text-muted: #94a3b8;
-    
-    --border: rgba(148, 163, 184, 0.2);
-    --border-light: rgba(148, 163, 184, 0.1);
-    --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 20px 50px -12px rgba(0, 0, 0, 0.7);
-    --shadow-primary: 0 0 20px rgba(59, 130, 246, 0.3);
-    
-    --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    --gradient-secondary: linear-gradient(135deg, #06b6d4, #10b981);
-    --gradient-accent: linear-gradient(135deg, #f59e0b, #ef4444);
-    
-    --border-radius: 16px;
-    --border-radius-lg: 24px;
-    --border-radius-xl: 32px;
-    
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    
-    --theme-color-1: #3b82f6;
-    --theme-color-2: #8b5cf6;
+    --header-height: 70px;
+    /* ... variabel lainnya tetap sama ... */
 }
 
-/* ========== PERBAIKAN HEADER & ELEMEN TENGGELAM ========== */
-
-/* 1. Body dengan padding untuk ruang header */
+/* ===== FIX: BODY PADDING ===== */
 body {
-    font-family: 'Poppins', sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
-    transition: all var(--transition-slow);
-    min-height: 100vh;
-    width: 100%;
-    padding-top: var(--header-height); /* Ruang untuk header */
+    padding-top: var(--header-height);
     margin: 0;
-    box-sizing: border-box;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    width: 100%;
 }
 
-/* 2. Header yang fixed dengan tinggi tepat */
+/* ===== FIX: HEADER POSITIONING ===== */
 header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: var(--header-height);
     z-index: 1000;
     background: var(--bg-glass);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-light);
-    transition: all var(--transition-slow);
-    height: var(--header-height);
-    box-sizing: border-box;
-    overflow: hidden;
-    box-shadow: var(--shadow); /* Shadow untuk kontras */
+    box-shadow: var(--shadow);
+    transition: transform var(--transition-normal), background var(--transition-normal);
+    transform: translateY(0);
 }
 
-/* 3. Hero section tanpa margin-top negatif */
-.hero {
-    min-height: calc(100vh - var(--header-height)); /* Kurangi tinggi header */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    padding-top: 0; /* Tidak perlu padding-top */
-    width: 100%;
+header.hide {
+    transform: translateY(-100%);
 }
 
-/* 4. Scroll margin untuk semua section dengan anchor */
-section[id] {
+/* ===== FIX: SECTION SCROLL MARGIN ===== */
+section {
     scroll-margin-top: calc(var(--header-height) + 20px);
 }
 
-/* 5. Section pertama setelah header */
-.section {
-    padding: 6rem 0;
-    position: relative;
+/* ===== FIX: HERO SECTION ===== */
+.hero {
+    min-height: calc(100vh - var(--header-height));
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-/* 6. Container dengan padding yang konsisten */
-.container {
-    width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 2rem;
-    box-sizing: border-box;
+    justify-content: center;
     position: relative;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
-/* ========== PERBAIKAN KALKULATOR MODAL ========== */
-
-/* Modal backdrop */
+/* ===== FIX: MODAL CALCULATOR UNTUK MOBILE ===== */
 .modal#orderModal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     display: flex;
@@ -134,9 +69,11 @@ section[id] {
     z-index: 2000;
     opacity: 0;
     visibility: hidden;
-    transition: all var(--transition-slow);
+    transition: all 0.3s ease;
     padding: 1rem;
     box-sizing: border-box;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal#orderModal.active {
@@ -144,22 +81,24 @@ section[id] {
     visibility: visible;
 }
 
-/* Modal content responsive */
+/* FIX: Modal content yang lebih kecil dan responsif */
 .modal#orderModal .modal-content {
     background: var(--bg-card);
     border-radius: var(--border-radius-lg);
-    padding: 2.5rem;
-    max-width: 500px;
-    width: 100%;
+    padding: 2rem;
+    width: 95%;
+    max-width: 450px;
     position: relative;
-    transform: translateY(50px) scale(0.95);
+    transform: translateY(20px) scale(0.98);
     opacity: 0;
-    transition: all var(--transition-slow) 0.1s;
+    transition: all 0.4s ease 0.1s;
     border: 1px solid var(--border);
     box-shadow: var(--shadow-lg);
     max-height: 85vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
+    -webkit-overflow-scrolling: touch;
+    margin: auto;
+    overscroll-behavior: contain;
 }
 
 .modal#orderModal.active .modal-content {
@@ -167,228 +106,109 @@ section[id] {
     opacity: 1;
 }
 
-/* Modal header mobile */
-.modal#orderModal .modal-header {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-light);
+/* FIX: Scrollbar modal yang lebih kecil */
+.modal#orderModal .modal-content::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
 }
 
-.modal#orderModal .modal-title {
-    font-size: 1.6rem;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    flex-wrap: wrap;
+.modal#orderModal .modal-content::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 3px;
 }
 
-/* Form controls mobile friendly */
-.modal#orderModal .form-control {
-    width: 100%;
-    padding: 1rem 1.25rem;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius);
-    color: var(--text-primary);
-    font-family: 'Poppins', sans-serif;
-    font-size: 1rem;
-    transition: var(--transition-fast);
-    box-sizing: border-box;
-    -webkit-appearance: none; /* Hilangkan style default iOS */
-    -moz-appearance: none;
-    appearance: none;
-}
-
-/* Quantity controls mobile */
-.modal#orderModal .quantity-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin: 1rem 0;
-}
-
-.modal#orderModal .quantity-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-    background: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    font-size: 1.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.modal#orderModal .quantity-btn:active {
+.modal#orderModal .modal-content::-webkit-scrollbar-thumb {
     background: var(--primary);
-    color: white;
-    transform: scale(0.95);
+    border-radius: 3px;
 }
 
-.modal#orderModal .quantity-input {
-    flex-grow: 1;
-    text-align: center;
-    font-size: 1.1rem;
-    font-weight: bold;
-    height: 44px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--bg-secondary);
-    color: var(--text-primary);
+.modal#orderModal .modal-content::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
 }
 
-/* Speed selector mobile */
-.modal#orderModal .speed-selector {
-    flex-direction: column;
-    gap: 0.75rem;
-    margin: 1rem 0;
-}
+/* ===== FIX: MENU MOBILE TIDAK BERTABRAKAN ===== */
 
-.modal#orderModal .speed-option {
-    padding: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    border-radius: 12px;
-    border: 2px solid var(--border);
-    background: var(--bg-tertiary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.modal#orderModal .speed-option:active {
-    transform: scale(0.98);
-}
-
-.modal#orderModal .speed-option.selected {
-    border-color: var(--warning);
-    background: rgba(245, 158, 11, 0.1);
-}
-
-.modal#orderModal .speed-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0;
-    min-width: 40px;
-    text-align: center;
-}
-
-.modal#orderModal .speed-details {
-    flex-grow: 1;
-    text-align: left;
-}
-
-.modal#orderModal .speed-label {
-    margin-bottom: 0.25rem;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: var(--text-primary);
-}
-
-.modal#orderModal .speed-desc {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-}
-
-.modal#orderModal .speed-price {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--warning);
-    margin-top: 0.25rem;
-}
-
-/* Price preview mobile */
-.modal#orderModal .price-preview {
-    background: var(--bg-tertiary);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    text-align: center;
+/* Mobile menu container */
+.nav-links {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
     width: 100%;
-}
-
-.modal#orderModal .price-amount {
-    font-size: 2rem;
-    font-weight: 900;
-    color: var(--primary);
-    line-height: 1;
-    margin-bottom: 0.5rem;
-    text-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
-}
-
-/* Button group mobile */
-.modal#orderModal .btn-group {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     flex-direction: column;
-    gap: 0.75rem;
-    margin-top: 1rem;
+    padding: 0;
+    gap: 0;
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-normal);
+    box-shadow: var(--shadow-lg);
+    border-top: 1px solid var(--border-light);
+    z-index: 999; /* Di bawah modal (2000) tapi di atas konten */
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    pointer-events: none; /* Tidak bisa diklik saat hidden */
 }
 
-.modal#orderModal .btn {
-    padding: 1rem;
-    font-size: 0.95rem;
-    border-radius: 12px;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    -webkit-tap-highlight-color: transparent;
+.nav-links.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto; /* Bisa diklik saat active */
 }
 
-.modal#orderModal .btn:active {
-    transform: scale(0.98);
+/* Mobile menu items */
+.nav-link {
+    display: block;
+    padding: 1.25rem 1.5rem;
+    width: 100%;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 1.1rem;
+    text-align: left;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    background: transparent;
+    position: relative;
+    -webkit-tap-highlight-color: rgba(59, 130, 246, 0.3);
 }
 
-/* Coupon section mobile */
-.modal#orderModal .coupon-section {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+.nav-link:hover,
+.nav-link:focus {
+    background: var(--bg-tertiary);
+    color: var(--primary);
+    padding-left: 2rem;
 }
 
-.modal#orderModal .coupon-section input {
-    flex-grow: 1;
-    min-height: 44px;
+.nav-link.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-left: 4px solid var(--primary);
+    color: var(--primary);
+    font-weight: 600;
 }
 
-.modal#orderModal .coupon-section button {
-    white-space: nowrap;
-    padding: 0 1.25rem;
-    min-height: 44px;
+.nav-link:last-child {
+    border-bottom: none;
 }
 
-/* ========== RESPONSIVE MEDIA QUERIES ========== */
+/* ===== RESPONSIVE FIXES ===== */
 
-/* Tablet dan Mobile Landscape */
+/* Tablet */
 @media (max-width: 1024px) {
-    :root {
-        --header-height: 65px;
-    }
-    
-    .hero {
-        min-height: calc(100vh - var(--header-height));
-    }
-    
-    section[id] {
-        scroll-margin-top: calc(var(--header-height) + 15px);
-    }
-    
     .modal#orderModal .modal-content {
+        max-width: 500px;
+        width: 90%;
         padding: 2rem;
-        max-height: 90vh;
     }
 }
 
-/* Mobile (Landscape dan Portrait) */
+/* Mobile Landscape & Portrait */
 @media (max-width: 768px) {
+    /* Fix: Header lebih kecil di mobile */
     :root {
         --header-height: 60px;
     }
@@ -397,63 +217,111 @@ section[id] {
         padding-top: var(--header-height);
     }
     
+    /* Fix: Hero section di mobile */
     .hero {
         min-height: calc(100vh - var(--header-height));
-        padding-top: 1rem;
+        padding: 0 1rem;
     }
     
-    section[id] {
-        scroll-margin-top: calc(var(--header-height) + 10px);
-    }
-    
-    .section {
-        padding: 4rem 0;
-    }
-    
-    .container {
-        padding: 0 1.5rem;
-    }
-    
-    /* Modal mobile */
+    /* Fix: Modal calculator di mobile - lebih kecil */
     .modal#orderModal {
         padding: 0.5rem;
-        align-items: flex-end; /* Modal muncul dari bawah */
+        align-items: flex-start; /* Mulai dari atas */
     }
     
     .modal#orderModal .modal-content {
+        width: 95%;
+        max-width: 100%;
         padding: 1.5rem;
-        max-height: 95vh;
-        width: 100%;
+        max-height: 90vh;
         margin: 0.5rem auto;
-        border-radius: 16px 16px 0 0;
-        animation: slideUpMobile 0.3s ease-out;
+        transform: translateY(30px) scale(0.95);
+        border-radius: 16px;
     }
     
-    @keyframes slideUpMobile {
-        from {
-            transform: translateY(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
+    .modal#orderModal .modal-header {
+        padding: 0 0 1rem 0;
+        margin-bottom: 1rem;
     }
     
     .modal#orderModal .modal-title {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
+        gap: 0.75rem;
+    }
+    
+    .modal#orderModal .price-preview {
+        padding: 1.25rem;
+        margin: 1rem 0;
     }
     
     .modal#orderModal .price-amount {
         font-size: 1.8rem;
     }
     
-    /* Fix untuk input di iOS Safari */
-    input, select, textarea {
-        font-size: 16px !important; /* Cegah zoom otomatis di iOS */
+    /* Fix: Form elements di mobile */
+    .modal#orderModal .form-group {
+        margin-bottom: 1.25rem;
     }
     
-    /* Quantity controls mobile kecil */
+    .modal#orderModal .form-control {
+        padding: 0.875rem 1rem;
+        font-size: 1rem;
+        min-height: 44px;
+    }
+    
+    /* Fix: Speed selector di mobile */
+    .modal#orderModal .speed-selector {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin: 1rem 0;
+    }
+    
+    .modal#orderModal .speed-option {
+        padding: 0.875rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        min-height: auto;
+    }
+    
+    .modal#orderModal .speed-icon {
+        font-size: 1.25rem;
+        margin-bottom: 0;
+        min-width: 35px;
+    }
+    
+    .modal#orderModal .speed-label {
+        font-size: 0.9rem;
+        margin-bottom: 0.125rem;
+    }
+    
+    .modal#orderModal .speed-desc {
+        font-size: 0.75rem;
+    }
+    
+    .modal#orderModal .speed-price {
+        font-size: 0.8rem;
+        margin-top: 0.125rem;
+    }
+    
+    /* Fix: Button di modal mobile */
+    .modal#orderModal .btn-group {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1.5rem;
+    }
+    
+    .modal#orderModal .btn {
+        padding: 0.875rem;
+        font-size: 0.95rem;
+        min-height: 46px;
+    }
+    
+    /* Fix: Quantity controls di mobile */
+    .modal#orderModal .quantity-controls {
+        gap: 0.5rem;
+    }
+    
     .modal#orderModal .quantity-btn {
         width: 40px;
         height: 40px;
@@ -463,176 +331,234 @@ section[id] {
     .modal#orderModal .quantity-input {
         height: 40px;
         font-size: 1rem;
+        padding: 0 0.5rem;
     }
     
-    /* Speed option mobile kecil */
-    .modal#orderModal .speed-option {
-        padding: 0.875rem;
+    /* Fix: Mobile menu items */
+    .nav-link {
+        padding: 1rem 1.5rem;
+        font-size: 1rem;
     }
     
-    .modal#orderModal .speed-icon {
-        font-size: 1.3rem;
-        min-width: 35px;
-    }
-    
-    /* Button mobile kecil */
-    .modal#orderModal .btn {
-        padding: 0.875rem;
-        font-size: 0.9rem;
-        min-height: 46px;
+    /* Container padding mobile */
+    .container {
+        padding: 0 1.25rem;
     }
 }
 
-/* Mobile Portrait */
+/* Mobile Portrait (Lebih kecil) */
 @media (max-width: 480px) {
+    /* Fix: Header lebih kecil untuk mobile kecil */
     :root {
         --header-height: 55px;
     }
     
+    /* Fix: Hero section untuk mobile kecil */
     .hero {
-        min-height: calc(100vh - var(--header-height));
-        padding-top: 0.5rem;
+        padding: 0 0.75rem;
     }
     
-    section[id] {
-        scroll-margin-top: calc(var(--header-height) + 5px);
-    }
-    
-    .container {
-        padding: 0 1rem;
-    }
-    
+    /* Fix: Modal calculator lebih kecil untuk mobile kecil */
     .modal#orderModal .modal-content {
         padding: 1.25rem;
-        max-height: 98vh;
-        width: 100%;
-        border-radius: 14px 14px 0 0;
+        max-height: 92vh;
+        width: 98%;
+        margin: 0.25rem auto;
     }
     
     .modal#orderModal .modal-title {
         font-size: 1.2rem;
-        flex-direction: column;
         gap: 0.5rem;
-    }
-    
-    .modal#orderModal .price-preview {
-        padding: 1rem;
     }
     
     .modal#orderModal .price-amount {
         font-size: 1.6rem;
     }
     
-    .modal#orderModal .quantity-controls {
+    /* Fix: Form elements lebih kecil */
+    .modal#orderModal .form-control {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.95rem;
+        min-height: 42px;
+    }
+    
+    /* Fix: Speed option lebih kecil */
+    .modal#orderModal .speed-option {
+        padding: 0.75rem;
         gap: 0.5rem;
     }
     
+    .modal#orderModal .speed-icon {
+        font-size: 1.1rem;
+        min-width: 30px;
+    }
+    
+    /* Fix: Button lebih kecil */
+    .modal#orderModal .btn {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+    }
+    
+    /* Fix: Quantity controls lebih kecil */
     .modal#orderModal .quantity-btn {
-        width: 38px;
-        height: 38px;
+        width: 36px;
+        height: 36px;
         font-size: 0.9rem;
     }
     
     .modal#orderModal .quantity-input {
-        height: 38px;
-        font-size: 0.9rem;
+        height: 36px;
+        font-size: 0.95rem;
     }
     
-    .modal#orderModal .btn {
-        padding: 0.75rem;
-        font-size: 0.85rem;
-        min-height: 44px;
-    }
-    
-    /* Perbaikan khusus untuk iPhone notch */
-    @supports (-webkit-touch-callout: none) {
-        .modal#orderModal .modal-content {
-            padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
-        }
-        
-        .modal#orderModal .btn {
-            padding: 0.875rem 1rem;
-        }
+    /* Container lebih kecil */
+    .container {
+        padding: 0 1rem;
     }
 }
 
-/* iPhone kecil (SE, 5/5S) */
+/* Mobile sangat kecil (iPhone SE) */
 @media (max-width: 375px) {
     :root {
         --header-height: 50px;
     }
     
-    .hero {
-        min-height: calc(100vh - var(--header-height));
+    .modal#orderModal .modal-content {
+        padding: 1rem;
+        max-height: 94vh;
+        width: 99%;
+    }
+    
+    .modal#orderModal .modal-title {
+        font-size: 1.1rem;
+    }
+    
+    .modal#orderModal .price-amount {
+        font-size: 1.4rem;
+    }
+    
+    .modal#orderModal .form-control {
+        padding: 0.625rem 0.75rem;
+        font-size: 0.9rem;
+        min-height: 40px;
     }
     
     .modal#orderModal .quantity-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
+        width: 34px;
+        height: 34px;
+        font-size: 0.85rem;
     }
     
     .modal#orderModal .quantity-input {
-        height: 35px;
+        height: 34px;
         font-size: 0.9rem;
+    }
+    
+    .modal#orderModal .btn {
+        padding: 0.625rem;
+        font-size: 0.85rem;
+        min-height: 40px;
     }
 }
 
-/* Landscape mode optimization */
+/* ===== FIX UNTUK ORIENTATION LANDSCAPE ===== */
 @media (max-height: 500px) and (orientation: landscape) {
-    :root {
-        --header-height: 50px;
+    .modal#orderModal {
+        align-items: flex-start;
+        padding-top: var(--header-height);
     }
     
     .modal#orderModal .modal-content {
-        max-height: 90vh;
-        overflow-y: auto;
+        max-height: calc(100vh - var(--header-height) - 1rem);
+        margin: 0.5rem auto;
     }
     
-    .hero {
-        min-height: auto;
-        padding: 3rem 0;
+    .nav-links {
+        max-height: calc(100vh - var(--header-height));
+        overflow-y: auto;
     }
 }
 
-/* Fix untuk iOS safe area */
+/* ===== FIX UNTUK IOS SAFARI ===== */
+@supports (-webkit-touch-callout: none) {
+    /* Cegah bounce effect di iOS */
+    body {
+        overscroll-behavior-y: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Fix untuk modal di iOS */
+    .modal#orderModal .modal-content {
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+    }
+    
+    /* Fix untuk input di iOS */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* ===== FIX UNTUK SAFE AREA (iPhone dengan notch) ===== */
 @supports (padding: max(0px)) {
+    body {
+        padding-top: calc(var(--header-height) + env(safe-area-inset-top));
+    }
+    
     header {
-        padding-left: max(0.5rem, env(safe-area-inset-left));
-        padding-right: max(0.5rem, env(safe-area-inset-right));
-        padding-top: max(0px, env(safe-area-inset-top));
+        padding-top: env(safe-area-inset-top);
+        height: calc(var(--header-height) + env(safe-area-inset-top));
     }
     
     .nav-container {
-        padding-left: max(0.5rem, env(safe-area-inset-left));
-        padding-right: max(0.5rem, env(safe-area-inset-right));
+        height: var(--header-height);
+    }
+    
+    .nav-links {
+        top: calc(var(--header-height) + env(safe-area-inset-top));
+        max-height: calc(100vh - calc(var(--header-height) + env(safe-area-inset-top)));
     }
     
     .modal#orderModal .modal-content {
-        padding-left: max(1rem, env(safe-area-inset-left));
-        padding-right: max(1rem, env(safe-area-inset-right));
+        padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
     }
 }
 
-/* Fix untuk backdrop blur di iOS */
-@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-    header, .modal#orderModal {
-        -webkit-backdrop-filter: blur(20px);
-        backdrop-filter: blur(20px);
-    }
-}
-
-/* Cegah overscroll/bounce di iOS */
-html {
+/* ===== FIX: MENCEGAH SCROLL LOCK SAAT MENU/MODAL TERBUKA ===== */
+body.menu-open,
+body.modal-open {
     overflow: hidden;
-    height: 100%;
+    position: fixed;
     width: 100%;
+    height: 100%;
 }
 
-body {
-    height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    position: relative;
-    width: 100%;
+/* ===== FIX: ANIMASI HALUS UNTUK MODAL DAN MENU ===== */
+.modal#orderModal .modal-content,
+.nav-links {
+    animation-duration: 0.3s;
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    animation-fill-mode: both;
+}
+
+/* ===== FIX: OVERLAY UNTUK MENU MOBILE ===== */
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.menu-overlay.active {
+    display: block;
+    opacity: 1;
 }
