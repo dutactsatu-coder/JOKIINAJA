@@ -1,6 +1,6 @@
 /* === ROOT VARIABLES === */
 :root {
-    --header-height: 70px; /* Kurangi dari 80px untuk mobile */
+    --header-height: 70px; /* Tinggi header default */
     --primary: #3b82f6;
     --primary-dark: #1d4ed8;
     --secondary: #8b5cf6;
@@ -40,10 +40,26 @@
     
     --theme-color-1: #3b82f6;
     --theme-color-2: #8b5cf6;
-    --vh: 1vh; /* Untuk mobile height fix */
 }
 
-/* === HEADER FIX - PERBAIKAN UTAMA === */
+/* ========== PERBAIKAN HEADER & ELEMEN TENGGELAM ========== */
+
+/* 1. Body dengan padding untuk ruang header */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: all var(--transition-slow);
+    min-height: 100vh;
+    width: 100%;
+    padding-top: var(--header-height); /* Ruang untuk header */
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* 2. Header yang fixed dengan tinggi tepat */
 header {
     position: fixed;
     top: 0;
@@ -58,579 +74,298 @@ header {
     height: var(--header-height);
     box-sizing: border-box;
     overflow: hidden;
+    box-shadow: var(--shadow); /* Shadow untuk kontras */
 }
 
-.nav-container {
+/* 3. Hero section tanpa margin-top negatif */
+.hero {
+    min-height: calc(100vh - var(--header-height)); /* Kurangi tinggi header */
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    height: 100%;
-    padding: 0 1rem;
-    max-width: 100%;
-    margin: 0 auto;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    padding-top: 0; /* Tidak perlu padding-top */
+    width: 100%;
+}
+
+/* 4. Scroll margin untuk semua section dengan anchor */
+section[id] {
+    scroll-margin-top: calc(var(--header-height) + 20px);
+}
+
+/* 5. Section pertama setelah header */
+.section {
+    padding: 6rem 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     box-sizing: border-box;
-    overflow: visible;
+}
+
+/* 6. Container dengan padding yang konsisten */
+.container {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    box-sizing: border-box;
     position: relative;
 }
 
-/* Logo lebih responsif */
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-    font-weight: 800;
-    font-size: 1.4rem;
-    color: var(--text-primary);
-    transition: all var(--transition-slow);
-    position: relative;
-    padding: 0.25rem;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 1;
-    min-width: 0;
-}
+/* ========== PERBAIKAN KALKULATOR MODAL ========== */
 
-.logo:hover {
-    transform: translateY(-2px);
-    background: var(--bg-glass);
-}
-
-.logo-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+/* Modal backdrop */
+.modal#orderModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.4rem;
-    position: relative;
-    z-index: 2;
-    transition: all var(--transition-slow);
-    background: linear-gradient(45deg, var(--theme-color-1), var(--theme-color-2));
-    color: white;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-}
-
-.logo-text {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-    position: relative;
-    z-index: 2;
-    min-width: 0;
-    overflow: hidden;
-}
-
-.logo-main {
-    font-weight: 900;
-    background: linear-gradient(45deg, var(--theme-color-1), var(--theme-color-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    transition: all var(--transition-slow);
-    font-size: 1.3rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px;
-}
-
-.logo-sub {
-    font-size: 0.6rem;
-    font-weight: 600;
-    color: var(--text-muted);
-    letter-spacing: 0.3px;
-    transition: all var(--transition-slow);
-    white-space: nowrap;
-}
-
-/* Header controls lebih kompak */
-.header-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    flex-shrink: 0;
-}
-
-/* Tombol Kalkulator AI lebih kecil */
-.btn.btn-sm {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
-    white-space: nowrap;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-/* Theme toggle lebih kecil */
-.theme-toggle,
-.mobile-toggle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    font-size: 1.1rem;
-    flex-shrink: 0;
-}
-
-/* Navigation links */
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    list-style: none;
-}
-
-.nav-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: all var(--transition-fast);
-    position: relative;
-    padding: 0.5rem 0;
-    white-space: nowrap;
-}
-
-/* === PERBAIKAN UNTUK CARDS GRID & MENU LAYANAN === */
-
-/* Perbaikan posisi badge dan harga cepat */
-.card-badge-container {
-    position: relative;
-    margin-bottom: 1.5rem;
-    height: 30px; /* Tambahkan tinggi tetap */
-}
-
-.card-badge {
-    position: absolute;
-    top: -12px; /* Naikkan sedikit */
-    right: 10px;
-    background: linear-gradient(45deg, #f59e0b, #f97316);
-    color: white;
-    padding: 0.4rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-    z-index: 10;
-    animation: pulseBadge 2s infinite;
-    white-space: nowrap;
-    max-width: 120px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-@keyframes pulseBadge {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-/* Tambahkan arrow indicator */
-.card-arrow {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-    width: 30px;
-    height: 30px;
-    background: var(--primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.9rem;
+    z-index: 2000;
     opacity: 0;
-    transform: translateX(10px);
-    transition: all 0.3s ease;
-    z-index: 2;
-    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+    visibility: hidden;
+    transition: all var(--transition-slow);
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
-.card:hover .card-arrow {
+.modal#orderModal.active {
     opacity: 1;
-    transform: translateX(0);
-    animation: bounceRight 1s infinite;
+    visibility: visible;
 }
 
-@keyframes bounceRight {
-    0%, 100% { transform: translateX(0); }
-    50% { transform: translateX(5px); }
-}
-
-/* Perbaikan price-note agar tidak bertabrakan */
-.price-note {
-    margin: 0.75rem 0 1.25rem;
-    padding: 0.75rem;
-    background: rgba(245, 158, 11, 0.1);
-    border-radius: 10px;
-    border-left: 3px solid #f59e0b;
-    position: relative;
-    overflow: hidden;
-}
-
-.price-note::before {
-    content: '⚡';
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    font-size: 1rem;
-    opacity: 0.3;
-}
-
-.fast-price {
-    color: #f59e0b;
-    font-weight: 600;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding-left: 25px;
-}
-
-/* Perbaikan spacing untuk card content */
-.card {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
+/* Modal content responsive */
+.modal#orderModal .modal-content {
     background: var(--bg-card);
-    border: 1px solid var(--border);
     border-radius: var(--border-radius-lg);
-    padding: 2.5rem 2rem;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.card-content {
-    position: relative;
-    z-index: 2;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* Tambahkan hover effect yang lebih baik untuk card */
-.card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
+    padding: 2.5rem;
+    max-width: 500px;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--theme-color-1), var(--theme-color-2));
+    position: relative;
+    transform: translateY(50px) scale(0.95);
     opacity: 0;
-    transition: opacity 0.3s ease;
-    z-index: 1;
+    transition: all var(--transition-slow) 0.1s;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    max-height: 85vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scroll di iOS */
 }
 
-.card:hover::after {
-    opacity: 0.05;
+.modal#orderModal.active .modal-content {
+    transform: translateY(0) scale(1);
+    opacity: 1;
 }
 
-/* Perbaikan button group di card */
-.card .btn-group-vertical {
-    margin-top: auto;
-    gap: 0.75rem;
+/* Modal header mobile */
+.modal#orderModal .modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
 }
 
-/* Tambahkan rating stars di card */
-.card-rating {
+.modal#orderModal .modal-title {
+    font-size: 1.6rem;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin: 0.5rem 0 1rem;
-    color: var(--warning);
-    font-size: 0.85rem;
-}
-
-.card-rating-stars {
-    color: #f59e0b;
-    display: flex;
-    gap: 0.2rem;
-}
-
-.card-review-count {
-    color: var(--text-muted);
-    font-size: 0.8rem;
-}
-
-/* === PERBAIKAN UNTUK TESTIMONIALS === */
-
-/* Tambahkan tombol arrow untuk testimonial navigation */
-.testimonial-nav-arrows {
-    display: flex;
     justify-content: center;
     gap: 1rem;
-    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+/* Form controls mobile friendly */
+.modal#orderModal .form-control {
     width: 100%;
-}
-
-.testimonial-arrow {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    color: var(--text-primary);
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: var(--shadow);
-}
-
-.testimonial-arrow:hover {
-    background: var(--primary);
-    color: white;
-    transform: scale(1.1);
-    box-shadow: var(--shadow-primary);
-}
-
-/* Perbaikan testimonial cards */
-.testimonial-card-next {
-    position: relative;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius-lg);
-    padding: 2rem;
-    flex: 0 0 calc(33.333% - 1.334rem);
-    min-width: 300px;
-}
-
-.testimonial-card-next:hover {
-    transform: translateY(-5px) scale(1.02);
-    border-color: var(--primary);
-    box-shadow: var(--shadow);
-}
-
-.testimonial-card-next::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--theme-color-1), var(--theme-color-2));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: var(--border-radius-lg);
-    z-index: 1;
-}
-
-.testimonial-card-next:hover::after {
-    opacity: 0.05;
-}
-
-/* Tambahkan rating input di modal testimonial */
-.rating-input {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.rating-stars-input {
-    display: flex;
-    gap: 0.5rem;
-    font-size: 1.8rem;
-    justify-content: center;
-}
-
-.rating-stars-input .star {
-    cursor: pointer;
-    color: #e2e8f0;
-    transition: all 0.2s ease;
-}
-
-.rating-stars-input .star:hover,
-.rating-stars-input .star.active {
-    color: #f59e0b;
-    transform: scale(1.2);
-}
-
-.rating-label {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-top: 0.5rem;
-}
-
-/* === STYLES UNTUL REVIEW FORM === */
-.review-form-container {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius-lg);
-    padding: 2rem;
-    margin-top: 2rem;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.review-form-container h3 {
-    margin-bottom: 1.5rem;
-    text-align: center;
-    color: var(--text-primary);
-}
-
-.review-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.review-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.review-form-group label {
-    font-weight: 500;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.review-form-group input,
-.review-form-group textarea,
-.review-form-group select {
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.25rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
     border-radius: var(--border-radius);
     color: var(--text-primary);
     font-family: 'Poppins', sans-serif;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
+    font-size: 1rem;
+    transition: var(--transition-fast);
+    box-sizing: border-box;
+    -webkit-appearance: none; /* Hilangkan style default iOS */
+    -moz-appearance: none;
+    appearance: none;
 }
 
-.review-form-group input:focus,
-.review-form-group textarea:focus,
-.review-form-group select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+/* Quantity controls mobile */
+.modal#orderModal .quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem 0;
 }
 
-.review-form-group textarea {
-    min-height: 120px;
-    resize: vertical;
+.modal#orderModal .quantity-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.review-submit-btn {
-    margin-top: 1rem;
+.modal#orderModal .quantity-btn:active {
     background: var(--primary);
     color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--border-radius);
-    font-weight: 600;
+    transform: scale(0.95);
+}
+
+.modal#orderModal .quantity-input {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: bold;
+    height: 44px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+/* Speed selector mobile */
+.modal#orderModal .speed-selector {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1rem 0;
+}
+
+.modal#orderModal .speed-option {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--bg-tertiary);
     cursor: pointer;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.modal#orderModal .speed-option:active {
+    transform: scale(0.98);
+}
+
+.modal#orderModal .speed-option.selected {
+    border-color: var(--warning);
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.modal#orderModal .speed-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+    min-width: 40px;
+    text-align: center;
+}
+
+.modal#orderModal .speed-details {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.modal#orderModal .speed-label {
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal#orderModal .speed-desc {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.modal#orderModal .speed-price {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--warning);
+    margin-top: 0.25rem;
+}
+
+/* Price preview mobile */
+.modal#orderModal .price-preview {
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    text-align: center;
+    width: 100%;
+}
+
+.modal#orderModal .price-amount {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 10px rgba(59, 130, 246, 0.3);
+}
+
+/* Button group mobile */
+.modal#orderModal .btn-group {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.modal#orderModal .btn {
+    padding: 1rem;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    min-height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.review-submit-btn:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
+.modal#orderModal .btn:active {
+    transform: scale(0.98);
 }
 
-/* Success message */
-.review-success {
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid var(--success);
-    border-radius: var(--border-radius);
-    padding: 1rem;
-    text-align: center;
-    color: var(--success);
-    margin-top: 1rem;
-    display: none;
-}
-
-.review-success.show {
-    display: block;
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* === ANIMASI TAMBAHAN === */
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.card:nth-child(odd) {
-    animation: slideInLeft 0.6s ease forwards;
-}
-
-.card:nth-child(even) {
-    animation: slideInRight 0.6s ease forwards;
-}
-
-/* Delay animasi untuk setiap card */
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.2s; }
-.card:nth-child(3) { animation-delay: 0.3s; }
-.card:nth-child(4) { animation-delay: 0.4s; }
-.card:nth-child(5) { animation-delay: 0.5s; }
-.card:nth-child(6) { animation-delay: 0.6s; }
-
-/* === LOADING ANIMATION UNTUL REVIEWS === */
-.review-loading {
+/* Coupon section mobile */
+.modal#orderModal .coupon-section {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100px;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
 }
 
-.review-loading .spinner {
-    width: 30px;
-    height: 30px;
-    border: 3px solid var(--border);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+.modal#orderModal .coupon-section input {
+    flex-grow: 1;
+    min-height: 44px;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.modal#orderModal .coupon-section button {
+    white-space: nowrap;
+    padding: 0 1.25rem;
+    min-height: 44px;
 }
 
-/* === MEDIA QUERIES UNTUK MOBILE === */
+/* ========== RESPONSIVE MEDIA QUERIES ========== */
 
 /* Tablet dan Mobile Landscape */
 @media (max-width: 1024px) {
@@ -638,169 +373,113 @@ header {
         --header-height: 65px;
     }
     
-    .logo-main {
-        max-width: 120px;
-        font-size: 1.2rem;
+    .hero {
+        min-height: calc(100vh - var(--header-height));
     }
     
-    .logo-sub {
-        font-size: 0.55rem;
+    section[id] {
+        scroll-margin-top: calc(var(--header-height) + 15px);
     }
     
-    .nav-links {
-        gap: 1.2rem;
-    }
-    
-    .nav-link {
-        font-size: 0.85rem;
-    }
-    
-    .testimonial-card-next {
-        flex: 0 0 calc(50% - 1rem);
+    .modal#orderModal .modal-content {
+        padding: 2rem;
+        max-height: 90vh;
     }
 }
 
-/* Mobile Landscape dan Tablet Portrait */
+/* Mobile (Landscape dan Portrait) */
 @media (max-width: 768px) {
     :root {
         --header-height: 60px;
     }
     
-    .nav-container {
-        padding: 0 0.8rem;
+    body {
+        padding-top: var(--header-height);
     }
     
-    .logo {
-        gap: 0.4rem;
+    .hero {
+        min-height: calc(100vh - var(--header-height));
+        padding-top: 1rem;
     }
     
-    .logo-icon {
-        width: 35px;
-        height: 35px;
-        font-size: 1.2rem;
+    section[id] {
+        scroll-margin-top: calc(var(--header-height) + 10px);
     }
     
-    .logo-main {
-        font-size: 1.1rem;
-        max-width: 100px;
+    .section {
+        padding: 4rem 0;
     }
     
-    .logo-sub {
-        font-size: 0.5rem;
+    .container {
+        padding: 0 1.5rem;
     }
     
-    .header-controls {
-        gap: 0.6rem;
+    /* Modal mobile */
+    .modal#orderModal {
+        padding: 0.5rem;
+        align-items: flex-end; /* Modal muncul dari bawah */
     }
     
-    .btn.btn-sm {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.75rem;
-        min-height: 36px;
-    }
-    
-    .theme-toggle,
-    .mobile-toggle {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-    }
-    
-    /* Sembunyikan nav links di mobile */
-    .nav-links {
-        position: fixed;
-        top: var(--header-height);
-        left: 0;
+    .modal#orderModal .modal-content {
+        padding: 1.5rem;
+        max-height: 95vh;
         width: 100%;
-        background: var(--bg-card);
-        flex-direction: column;
-        padding: 1rem;
-        gap: 0;
-        transform: translateY(-100%);
-        opacity: 0;
-        visibility: hidden;
-        transition: all var(--transition-normal);
-        box-shadow: var(--shadow);
-        border-top: 1px solid var(--border);
-        z-index: 999;
-        max-height: calc(var(--vh, 1vh) * 100 - var(--header-height));
-        overflow-y: auto;
+        margin: 0.5rem auto;
+        border-radius: 16px 16px 0 0;
+        animation: slideUpMobile 0.3s ease-out;
     }
     
-    .nav-links.active {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
+    @keyframes slideUpMobile {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
     }
     
-    .nav-link {
-        padding: 1rem 0;
-        width: 100%;
-        border-bottom: 1px solid var(--border-light);
-        font-size: 1rem;
+    .modal#orderModal .modal-title {
+        font-size: 1.3rem;
     }
     
-    .mobile-toggle {
-        display: flex;
+    .modal#orderModal .price-amount {
+        font-size: 1.8rem;
     }
     
-    /* Theme options position fix */
-    .theme-options {
-        position: fixed;
-        top: var(--header-height);
-        right: 0.8rem;
-        left: auto;
-        bottom: auto;
+    /* Fix untuk input di iOS Safari */
+    input, select, textarea {
+        font-size: 16px !important; /* Cegah zoom otomatis di iOS */
     }
     
-    /* Perbaikan untuk cards grid di mobile */
-    .cards-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 0 1rem;
-    }
-    
-    .card {
-        margin: 0 auto;
-        max-width: 100%;
-    }
-    
-    /* Perbaikan untuk badge di mobile */
-    .card-badge {
-        top: -10px;
-        right: 5px;
-        padding: 0.3rem 0.8rem;
-        font-size: 0.7rem;
-        max-width: 100px;
-    }
-    
-    .card-arrow {
-        width: 25px;
-        height: 25px;
-        font-size: 0.8rem;
-        bottom: 15px;
-        right: 15px;
-    }
-    
-    .price-note {
-        margin: 0.5rem 0 1rem;
-        padding: 0.6rem;
-    }
-    
-    .testimonial-arrow {
+    /* Quantity controls mobile kecil */
+    .modal#orderModal .quantity-btn {
         width: 40px;
         height: 40px;
         font-size: 1rem;
     }
     
-    .testimonial-card-next {
-        flex: 0 0 100%;
+    .modal#orderModal .quantity-input {
+        height: 40px;
+        font-size: 1rem;
     }
     
-    /* Pastikan tombol di card tidak terlalu kecil */
-    .card .btn {
-        padding: 0.75rem 1rem;
+    /* Speed option mobile kecil */
+    .modal#orderModal .speed-option {
+        padding: 0.875rem;
+    }
+    
+    .modal#orderModal .speed-icon {
+        font-size: 1.3rem;
+        min-width: 35px;
+    }
+    
+    /* Button mobile kecil */
+    .modal#orderModal .btn {
+        padding: 0.875rem;
         font-size: 0.9rem;
+        min-height: 46px;
     }
 }
 
@@ -810,96 +489,92 @@ header {
         --header-height: 55px;
     }
     
-    .nav-container {
-        padding: 0 0.5rem;
+    .hero {
+        min-height: calc(100vh - var(--header-height));
+        padding-top: 0.5rem;
     }
     
-    .logo {
-        gap: 0.3rem;
+    section[id] {
+        scroll-margin-top: calc(var(--header-height) + 5px);
     }
     
-    .logo-icon {
-        width: 30px;
-        height: 30px;
-        font-size: 1rem;
-        border-radius: 8px;
+    .container {
+        padding: 0 1rem;
     }
     
-    .logo-main {
-        font-size: 1rem;
-        max-width: 80px;
+    .modal#orderModal .modal-content {
+        padding: 1.25rem;
+        max-height: 98vh;
+        width: 100%;
+        border-radius: 14px 14px 0 0;
     }
     
-    .logo-sub {
-        display: none; /* Sembunyikan di layar sangat kecil */
-    }
-    
-    .btn.btn-sm {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.7rem;
-        min-height: 32px;
-        gap: 0.3rem;
-    }
-    
-    .btn.btn-sm i {
-        font-size: 0.8rem;
-    }
-    
-    .theme-toggle,
-    .mobile-toggle {
-        width: 32px;
-        height: 32px;
-        font-size: 0.9rem;
-    }
-    
-    /* Perbaiki spacing untuk elemen yang sangat kecil */
-    .header-controls {
-        gap: 0.4rem;
-    }
-    
-    .card-badge {
-        font-size: 0.65rem;
-        padding: 0.25rem 0.6rem;
-        max-width: 90px;
-    }
-    
-    .price-note {
-        padding: 0.5rem;
-    }
-    
-    .fast-price {
-        font-size: 0.8rem;
-    }
-    
-    .testimonial-nav-arrows {
+    .modal#orderModal .modal-title {
+        font-size: 1.2rem;
+        flex-direction: column;
         gap: 0.5rem;
     }
     
-    .testimonial-arrow {
-        width: 35px;
-        height: 35px;
+    .modal#orderModal .price-preview {
+        padding: 1rem;
+    }
+    
+    .modal#orderModal .price-amount {
+        font-size: 1.6rem;
+    }
+    
+    .modal#orderModal .quantity-controls {
+        gap: 0.5rem;
+    }
+    
+    .modal#orderModal .quantity-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+    
+    .modal#orderModal .quantity-input {
+        height: 38px;
+        font-size: 0.9rem;
+    }
+    
+    .modal#orderModal .btn {
+        padding: 0.75rem;
+        font-size: 0.85rem;
+        min-height: 44px;
+    }
+    
+    /* Perbaikan khusus untuk iPhone notch */
+    @supports (-webkit-touch-callout: none) {
+        .modal#orderModal .modal-content {
+            padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+        }
+        
+        .modal#orderModal .btn {
+            padding: 0.875rem 1rem;
+        }
     }
 }
 
-/* iPhone kecil (SE, 5/5S) dan perangkat sempit */
+/* iPhone kecil (SE, 5/5S) */
 @media (max-width: 375px) {
     :root {
         --header-height: 50px;
     }
     
-    .logo-main {
+    .hero {
+        min-height: calc(100vh - var(--header-height));
+    }
+    
+    .modal#orderModal .quantity-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+    
+    .modal#orderModal .quantity-input {
+        height: 35px;
         font-size: 0.9rem;
-        max-width: 70px;
-    }
-    
-    .btn.btn-sm {
-        padding: 0.35rem 0.5rem;
-        font-size: 0.65rem;
-        min-height: 30px;
-    }
-    
-    .btn.btn-sm i {
-        font-size: 0.7rem;
     }
 }
 
@@ -909,13 +584,14 @@ header {
         --header-height: 50px;
     }
     
-    .logo-main {
-        max-width: 100px;
+    .modal#orderModal .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
     }
     
-    .btn.btn-sm {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.7rem;
+    .hero {
+        min-height: auto;
+        padding: 3rem 0;
     }
 }
 
@@ -931,97 +607,31 @@ header {
         padding-left: max(0.5rem, env(safe-area-inset-left));
         padding-right: max(0.5rem, env(safe-area-inset-right));
     }
-}
-
-/* Perbaikan untuk mencegah horizontal scroll */
-html, body {
-    max-width: 100%;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* Tambahan untuk mobile viewport fix */
-@media (max-width: 768px) {
-    html {
-        overflow-x: hidden;
-        width: 100%;
-        position: relative;
-    }
     
-    body {
-        overflow-x: hidden;
-        width: 100%;
-    }
-    
-    /* Pastikan header tidak menyebabkan horizontal scroll */
-    header {
-        max-width: 100vw;
-        left: 0;
-        right: 0;
-    }
-    
-    .nav-container {
-        max-width: 100vw;
-        overflow: hidden;
-    }
-}
-
-/* Loading screen adjustment untuk mobile */
-@media (max-width: 768px) {
-    .loading-screen {
-        padding: 1rem;
-        box-sizing: border-box;
-    }
-    
-    .rocket-loader {
-        width: 70px;
-        height: 70px;
-    }
-    
-    .rocket {
-        font-size: 2rem;
-    }
-    
-    .loading-text {
-        font-size: 1.2rem;
-    }
-}
-
-/* Hero section adjustment untuk header yang lebih kecil */
-@media (max-width: 768px) {
-    .hero {
-        padding-top: var(--header-height);
-        min-height: calc(var(--vh, 1vh) * 100);
+    .modal#orderModal .modal-content {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
     }
 }
 
 /* Fix untuk backdrop blur di iOS */
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-    header {
+    header, .modal#orderModal {
         -webkit-backdrop-filter: blur(20px);
         backdrop-filter: blur(20px);
     }
 }
 
-/* Animasi untuk header saat scroll */
-header.scrolled {
-    background: var(--bg-glass);
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-
-/* Cegah overscroll/bounce di iOS untuk header */
+/* Cegah overscroll/bounce di iOS */
 html {
     overflow: hidden;
     height: 100%;
-    position: fixed;
     width: 100%;
 }
 
 body {
     height: 100%;
-    overflow: auto;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     position: relative;
     width: 100%;
