@@ -195,6 +195,441 @@ header {
     white-space: nowrap;
 }
 
+/* === PERBAIKAN UNTUK CARDS GRID & MENU LAYANAN === */
+
+/* Perbaikan posisi badge dan harga cepat */
+.card-badge-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+    height: 30px; /* Tambahkan tinggi tetap */
+}
+
+.card-badge {
+    position: absolute;
+    top: -12px; /* Naikkan sedikit */
+    right: 10px;
+    background: linear-gradient(45deg, #f59e0b, #f97316);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    z-index: 10;
+    animation: pulseBadge 2s infinite;
+    white-space: nowrap;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@keyframes pulseBadge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Tambahkan arrow indicator */
+.card-arrow {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 30px;
+    height: 30px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    z-index: 2;
+    box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+}
+
+.card:hover .card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+    animation: bounceRight 1s infinite;
+}
+
+@keyframes bounceRight {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+}
+
+/* Perbaikan price-note agar tidak bertabrakan */
+.price-note {
+    margin: 0.75rem 0 1.25rem;
+    padding: 0.75rem;
+    background: rgba(245, 158, 11, 0.1);
+    border-radius: 10px;
+    border-left: 3px solid #f59e0b;
+    position: relative;
+    overflow: hidden;
+}
+
+.price-note::before {
+    content: '⚡';
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    opacity: 0.3;
+}
+
+.fast-price {
+    color: #f59e0b;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 25px;
+}
+
+/* Perbaikan spacing untuk card content */
+.card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tambahkan hover effect yang lebih baik untuk card */
+.card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--theme-color-1), var(--theme-color-2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+}
+
+.card:hover::after {
+    opacity: 0.05;
+}
+
+/* Perbaikan button group di card */
+.card .btn-group-vertical {
+    margin-top: auto;
+    gap: 0.75rem;
+}
+
+/* Tambahkan rating stars di card */
+.card-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0 1rem;
+    color: var(--warning);
+    font-size: 0.85rem;
+}
+
+.card-rating-stars {
+    color: #f59e0b;
+    display: flex;
+    gap: 0.2rem;
+}
+
+.card-review-count {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+/* === PERBAIKAN UNTUK TESTIMONIALS === */
+
+/* Tambahkan tombol arrow untuk testimonial navigation */
+.testimonial-nav-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.testimonial-arrow {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+}
+
+.testimonial-arrow:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1);
+    box-shadow: var(--shadow-primary);
+}
+
+/* Perbaikan testimonial cards */
+.testimonial-card-next {
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    flex: 0 0 calc(33.333% - 1.334rem);
+    min-width: 300px;
+}
+
+.testimonial-card-next:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+}
+
+.testimonial-card-next::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--theme-color-1), var(--theme-color-2));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: var(--border-radius-lg);
+    z-index: 1;
+}
+
+.testimonial-card-next:hover::after {
+    opacity: 0.05;
+}
+
+/* Tambahkan rating input di modal testimonial */
+.rating-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.rating-stars-input {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 1.8rem;
+    justify-content: center;
+}
+
+.rating-stars-input .star {
+    cursor: pointer;
+    color: #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.rating-stars-input .star:hover,
+.rating-stars-input .star.active {
+    color: #f59e0b;
+    transform: scale(1.2);
+}
+
+.rating-label {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* === STYLES UNTUL REVIEW FORM === */
+.review-form-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.review-form-container h3 {
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.review-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.review-form-group label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.review-form-group input,
+.review-form-group textarea,
+.review-form-group select {
+    padding: 0.75rem 1rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.review-form-group input:focus,
+.review-form-group textarea:focus,
+.review-form-group select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.review-form-group textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.review-submit-btn {
+    margin-top: 1rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.review-submit-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+}
+
+/* Success message */
+.review-success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid var(--success);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    text-align: center;
+    color: var(--success);
+    margin-top: 1rem;
+    display: none;
+}
+
+.review-success.show {
+    display: block;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* === ANIMASI TAMBAHAN === */
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.card:nth-child(odd) {
+    animation: slideInLeft 0.6s ease forwards;
+}
+
+.card:nth-child(even) {
+    animation: slideInRight 0.6s ease forwards;
+}
+
+/* Delay animasi untuk setiap card */
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+/* === LOADING ANIMATION UNTUL REVIEWS === */
+.review-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;
+}
+
+.review-loading .spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* === MEDIA QUERIES UNTUK MOBILE === */
 
 /* Tablet dan Mobile Landscape */
@@ -218,6 +653,10 @@ header {
     
     .nav-link {
         font-size: 0.85rem;
+    }
+    
+    .testimonial-card-next {
+        flex: 0 0 calc(50% - 1rem);
     }
 }
 
@@ -313,6 +752,56 @@ header {
         left: auto;
         bottom: auto;
     }
+    
+    /* Perbaikan untuk cards grid di mobile */
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    
+    .card {
+        margin: 0 auto;
+        max-width: 100%;
+    }
+    
+    /* Perbaikan untuk badge di mobile */
+    .card-badge {
+        top: -10px;
+        right: 5px;
+        padding: 0.3rem 0.8rem;
+        font-size: 0.7rem;
+        max-width: 100px;
+    }
+    
+    .card-arrow {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .price-note {
+        margin: 0.5rem 0 1rem;
+        padding: 0.6rem;
+    }
+    
+    .testimonial-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+    
+    .testimonial-card-next {
+        flex: 0 0 100%;
+    }
+    
+    /* Pastikan tombol di card tidak terlalu kecil */
+    .card .btn {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
 }
 
 /* Mobile Portrait */
@@ -366,6 +855,29 @@ header {
     /* Perbaiki spacing untuk elemen yang sangat kecil */
     .header-controls {
         gap: 0.4rem;
+    }
+    
+    .card-badge {
+        font-size: 0.65rem;
+        padding: 0.25rem 0.6rem;
+        max-width: 90px;
+    }
+    
+    .price-note {
+        padding: 0.5rem;
+    }
+    
+    .fast-price {
+        font-size: 0.8rem;
+    }
+    
+    .testimonial-nav-arrows {
+        gap: 0.5rem;
+    }
+    
+    .testimonial-arrow {
+        width: 35px;
+        height: 35px;
     }
 }
 
@@ -514,6 +1026,3 @@ body {
     position: relative;
     width: 100%;
 }
-
-/* Tambahan JavaScript untuk viewport height fix di mobile */
-/* (Tambahkan di file JavaScript Anda) */
