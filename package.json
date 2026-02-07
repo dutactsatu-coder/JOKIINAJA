@@ -1,0 +1,19 @@
+{
+  "name": "jokiinaja-pro",
+  "version": "2.0.0",
+  "description": "Website Joki Tugas Premium dengan Animasi Next Level",
+  "main": "index.html",
+  "scripts": {
+    "start": "python server.py",
+    "dev": "live-server --port=3000 --open=index.html --watch=.",
+    "build": "echo 'No build step required'",
+    "test": "echo 'No tests specified'"
+  },
+  "keywords": ["joki", "tugas", "premium", "website", "animasi"],
+  "author": "AqFiy",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
