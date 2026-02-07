@@ -40,8 +40,9 @@
             --gradient-secondary: linear-gradient(135deg, #06b6d4, #10b981);
             --gradient-accent: linear-gradient(135deg, #f59e0b, #ef4444);
             
-            /* PERUBAHAN: Header lebih kecil */
+            /* PERBAIKAN: Section spacing untuk menghindari tertutup header */
             --header-height: 65px;
+            --section-padding-top: calc(var(--header-height) + 2rem);
             --border-radius: 16px;
             --border-radius-lg: 24px;
             --border-radius-xl: 32px;
@@ -122,6 +123,15 @@
             padding-top: var(--header-height);
         }
 
+        /* PERBAIKAN: Anchor offset untuk semua section */
+        #home,
+        #services,
+        #features,
+        #testimonials,
+        #contact {
+            scroll-margin-top: calc(var(--header-height) + 20px);
+        }
+
         ::selection {
             background: var(--primary);
             color: white;
@@ -184,7 +194,7 @@
         }
 
         .section {
-            padding: 6rem 0;
+            padding: var(--section-padding-top) 0 6rem 0;
             position: relative;
             display: flex;
             flex-direction: column;
@@ -220,7 +230,7 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 1000;
+            z-index: 1001; /* PERBAIKAN: Z-index lebih tinggi */
             background: var(--bg-glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -746,7 +756,7 @@
             overflow: hidden;
             padding-top: 0;
             width: 100%;
-            margin-top: calc(var(--header-height) * -1);
+            margin-top: 0; /* PERBAIKAN: Menghapus margin negatif */
         }
 
         .hero-background {
@@ -1561,50 +1571,75 @@
             transform: translateY(-3px);
         }
 
-        /* === MODAL === */
+        /* === PERBAIKAN: MODAL CALCULATOR UNTUK MOBILE === */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            display: flex;
+            display: none; /* PERBAIKAN: Diubah dari flex ke none */
             align-items: center;
             justify-content: center;
             z-index: 2000;
             opacity: 0;
             visibility: hidden;
-            transition: all var(--transition-slow);
-            padding: 2rem;
+            transition: all 0.3s ease;
+            padding: 1rem;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal.active {
             opacity: 1;
             visibility: visible;
+            display: flex; /* PERBAIKAN: Tampilkan saat aktif */
         }
 
         .modal-content {
             background: var(--bg-card);
             border-radius: var(--border-radius-xl);
-            padding: 3rem;
-            max-width: 500px;
+            padding: 2.5rem;
             width: 100%;
+            max-width: 500px;
             position: relative;
-            transform: translateY(50px) scale(0.9);
+            transform: translateY(20px);
             opacity: 0;
-            transition: all var(--transition-slow) 0.2s;
+            transition: all 0.4s ease;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-lg);
-            max-width: 95vw;
-            margin: 0 auto;
+            margin: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .modal.active .modal-content {
-            transform: translateY(0) scale(1);
+            transform: translateY(0);
             opacity: 1;
+        }
+
+        /* PERBAIKAN: Modal backdrop untuk iOS */
+        .modal::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: -1;
+        }
+
+        /* PERBAIKAN: Body overflow saat modal aktif */
+        body.modal-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
         }
 
         .modal-close {
@@ -1623,6 +1658,7 @@
             align-items: center;
             justify-content: center;
             transition: var(--transition-fast);
+            z-index: 10;
         }
 
         .modal-close:hover {
@@ -1861,7 +1897,7 @@
             transform: scale(1.2);
         }
 
-        /* === KALKULATOR AI RESPONSIVE STYLES === */
+        /* === PERBAIKAN: KALKULATOR AI RESPONSIVE STYLES === */
         .modal#orderModal .modal-content {
             max-width: 500px;
             width: 90%;
@@ -1963,6 +1999,28 @@
             padding: 0 1.25rem;
         }
 
+        /* === PERBAIKAN: Input tap target di mobile === */
+        @media (max-width: 768px) {
+            .form-control,
+            .speed-option,
+            .btn {
+                min-height: 44px; /* Ukuran tap target minimum untuk iOS */
+            }
+            
+            .modal-close {
+                width: 40px;
+                height: 40px;
+                top: 0.5rem;
+                right: 0.5rem;
+            }
+        }
+
+        /* === PERBAIKAN: Scroll behavior untuk modal di iOS === */
+        .modal-content {
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
         /* === MEDIA QUERIES UNTUK HEADER MOBILE === */
         @media (max-width: 1024px) {
             .nav-links {
@@ -2019,6 +2077,40 @@
             
             .logo-sub {
                 font-size: 0.55rem;
+            }
+            
+            /* PERBAIKAN: Modal untuk mobile */
+            .modal#orderModal .modal-content {
+                padding: 1.25rem;
+                max-width: 98%;
+                width: 98%;
+                max-height: 95vh;
+            }
+            
+            .modal#orderModal .modal-header {
+                padding-bottom: 1rem;
+            }
+            
+            .modal#orderModal .modal-title {
+                font-size: 1.3rem;
+            }
+            
+            .modal#orderModal .price-amount {
+                font-size: 2rem;
+            }
+            
+            .modal#orderModal .form-control {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .modal#orderModal .speed-selector {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .modal#orderModal .speed-option {
+                padding: 0.875rem;
             }
             
             /* Sembunyikan nav links di mobile */
@@ -2208,6 +2300,26 @@
             
             .nav-container {
                 padding: 0 0.7rem;
+            }
+            
+            /* PERBAIKAN: Modal untuk iPhone kecil */
+            .modal#orderModal .modal-content {
+                padding: 1rem;
+                max-width: 99%;
+                width: 99%;
+            }
+            
+            .modal#orderModal .modal-title {
+                font-size: 1.1rem;
+            }
+            
+            .modal#orderModal .price-amount {
+                font-size: 1.75rem;
+            }
+            
+            .modal#orderModal .btn {
+                padding: 0.875rem;
+                font-size: 0.85rem;
             }
             
             /* Logo lebih minimalis */
@@ -2931,7 +3043,7 @@
         </div>
     </footer>
 
-    <!-- Order Modal (Kalkulator AI) - SIZE FIXED -->
+    <!-- Order Modal (Kalkulator AI) - DIPERBAIKI -->
     <div class="modal" id="orderModal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeOrderModal()">
@@ -2952,7 +3064,7 @@
                         <option value="7000">📑 Laporan & Makalah (Rp 7K/hal)</option>
                         <option value="15000">📊 PowerPoint Premium (Rp 15K/slide)</option>
                         <option value="15000">✍️ Ringkasan & Resume (Rp 15K/hal)</option>
-                        <option value="15000">📖 Jurnal & Artikel Ilmiah (Rp 15K/hal)</option>
+                        <option value="25000">📖 Jurnal & Artikel Ilmiah (Rp 25K/hal)</option>
                         <option value="350000">💻 Programming & Coding (Rp 350K/project)</option>
                         <option value="150000">📈 Analisis Data & Statistik (Rp 150K/project)</option>
                     </select>
@@ -2961,9 +3073,9 @@
                 <div class="form-group">
                     <label class="form-label" for="quantity">Jumlah</label>
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <button type="button" class="btn btn-secondary" onclick="adjustAICalculatorQuantity(-1)" style="padding: 0.75rem 1rem; font-size: 1.1rem; min-width: 45px;">-</button>
-                        <input type="number" id="quantity" class="form-control" value="1" min="1" max="1000" style="text-align: center; font-size: 1.1rem; font-weight: bold;">
-                        <button type="button" class="btn btn-secondary" onclick="adjustAICalculatorQuantity(1)" style="padding: 0.75rem 1rem; font-size: 1.1rem; min-width: 45px;">+</button>
+                        <button type="button" class="btn btn-secondary" onclick="adjustAICalculatorQuantity(-1)" style="padding: 0.5rem 0.75rem; min-width: 40px;">-</button>
+                        <input type="number" id="quantity" class="form-control" value="1" min="1" max="1000" style="text-align: center; font-weight: bold;">
+                        <button type="button" class="btn btn-secondary" onclick="adjustAICalculatorQuantity(1)" style="padding: 0.5rem 0.75rem; min-width: 40px;">+</button>
                     </div>
                 </div>
                 
@@ -2974,7 +3086,7 @@
                     <label class="form-label" for="coupon">Kode Promo</label>
                     <div class="coupon-section">
                         <input type="text" id="coupon" class="form-control" placeholder="Masukkan kode promo">
-                        <button type="button" class="btn btn-outline" onclick="applyCoupon()" style="white-space: nowrap;">
+                        <button type="button" class="btn btn-outline" onclick="applyCoupon()" style="white-space: nowrap; padding: 0 1rem;">
                             Terapkan
                         </button>
                     </div>
@@ -2982,10 +3094,10 @@
                 
                 <div class="price-preview">
                     <div class="price-amount" id="totalPrice">Rp 7.000</div>
-                    <div class="price-breakdown" id="priceBreakdown" style="font-size: 0.9rem;"></div>
+                    <div class="price-breakdown" id="priceBreakdown"></div>
                 </div>
                 
-                <div class="btn-group" style="flex-direction: column; gap: 0.75rem;">
+                <div class="btn-group" style="flex-direction: column; gap: 0.75rem; margin-top: 1.5rem;">
                     <button type="button" class="btn btn-primary btn-full" onclick="placeAIOrder()" style="background: linear-gradient(135deg, #25D366, #128C7E);">
                         <i class="fab fa-whatsapp"></i> Order via WhatsApp
                     </button>
@@ -3081,47 +3193,76 @@
     </button>
 
     <script>
-        // ========== KALKULATOR AI - VARIABLES ==========
+        // ========== KALKULATOR AI - FIXED VARIABLES ==========
         let currentSpeed = 'normal';
         let speedFee = 0;
         let currentServicePrice = 7000;
         let currentUnit = 'halaman';
         let currentServiceName = 'Laporan & Makalah';
+        let modalOpening = false; // Flag untuk mencegah multiple openings
 
-        // ========== KALKULATOR AI - FUNCTIONS ==========
+        // ========== PERBAIKAN: KALKULATOR AI FUNCTIONS ==========
         function openOrderModal() {
-            const modal = document.getElementById('orderModal');
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            if (modalOpening) return;
+            modalOpening = true;
             
-            // Reset kalkulator ke default
+            const modal = document.getElementById('orderModal');
+            const modalContent = modal.querySelector('.modal-content');
+            
+            // Reset state modal
+            modal.style.display = 'flex';
+            modalContent.style.opacity = '0';
+            modalContent.style.transform = 'translateY(20px)';
+            
+            // Trigger reflow
+            void modal.offsetWidth;
+            
+            // Tambah kelas active
+            modal.classList.add('active');
+            document.body.classList.add('modal-open');
+            
+            // Reset kalkulator
             resetAICalculator();
             
-            // Set event listeners
+            // Setup calculator
             setupAICalculator();
             
             // Hitung harga awal
             calculateAIPrice();
             
-            // Animate modal
+            // Animate in
             setTimeout(() => {
-                modal.querySelector('.modal-content').style.opacity = '1';
-                modal.querySelector('.modal-content').style.transform = 'translateY(0) scale(1)';
+                modalContent.style.opacity = '1';
+                modalContent.style.transform = 'translateY(0)';
+                modalOpening = false;
             }, 10);
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
         }
 
         function closeOrderModal() {
             const modal = document.getElementById('orderModal');
-            modal.querySelector('.modal-content').style.opacity = '0';
-            modal.querySelector('.modal-content').style.transform = 'translateY(50px) scale(0.9)';
+            const modalContent = modal.querySelector('.modal-content');
+            
+            // Animate out
+            modalContent.style.opacity = '0';
+            modalContent.style.transform = 'translateY(20px)';
             
             setTimeout(() => {
                 modal.classList.remove('active');
+                document.body.classList.remove('modal-open');
+                modal.style.display = 'none';
+                
+                // Restore body scroll
                 document.body.style.overflow = 'auto';
             }, 300);
         }
 
+        // ========== PERBAIKAN: SETUP CALCULATOR ==========
         function setupAICalculator() {
+            console.log('Setting up AI Calculator...');
+            
             // Event listener untuk service type
             const serviceType = document.getElementById('serviceType');
             if (serviceType) {
@@ -3130,7 +3271,7 @@
                     const selectedOption = this.options[this.selectedIndex];
                     currentServiceName = selectedOption.text.split(' (')[0];
                     
-                    // Update unit berdasarkan layanan
+                    // Update unit
                     if (selectedOption.text.includes('/hal')) {
                         currentUnit = 'halaman';
                     } else if (selectedOption.text.includes('/slide')) {
@@ -3139,7 +3280,6 @@
                         currentUnit = 'project';
                     }
                     
-                    // Update speed selector
                     updateSpeedSelector();
                     calculateAIPrice();
                 });
@@ -3151,6 +3291,11 @@
                 quantityInput.addEventListener('input', function() {
                     if (this.value < 1) this.value = 1;
                     if (this.value > 1000) this.value = 1000;
+                    calculateAIPrice();
+                });
+                
+                quantityInput.addEventListener('change', function() {
+                    if (!this.value || this.value < 1) this.value = 1;
                     calculateAIPrice();
                 });
             }
@@ -3174,13 +3319,20 @@
                     placeAIOrder();
                 });
             }
+            
+            // Initial update
+            updateSpeedSelector();
+            calculateAIPrice();
         }
 
+        // ========== PERBAIKAN: SPEED SELECTOR ==========
         function updateSpeedSelector() {
             const speedContainer = document.getElementById('speedSelectorContainer');
-            if (!speedContainer) return;
+            if (!speedContainer) {
+                console.error('Speed container not found');
+                return;
+            }
             
-            // Tentukan biaya express berdasarkan layanan
             let expressFee = 35000;
             let expressTime = '6-12 jam';
             let normalTime = '1-3 hari';
@@ -3203,7 +3355,7 @@
                     <div class="speed-selector">
                         <div class="speed-option ${currentSpeed === 'normal' ? 'selected' : ''}" 
                              onclick="selectSpeed('normal', 0)" 
-                             style="flex: 1; padding: 1rem; border: 2px solid ${currentSpeed === 'normal' ? '#3b82f6' : '#e2e8f0'}; 
+                             style="flex: 1; padding: 1rem; border: 2px solid ${currentSpeed === 'normal' ? '#3b82f6' : 'var(--border)'}; 
                                     border-radius: var(--border-radius); background: ${currentSpeed === 'normal' ? 'rgba(59, 130, 246, 0.1)' : 'var(--bg-tertiary)'}; 
                                     cursor: pointer; transition: all 0.3s ease;">
                             <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📅</div>
@@ -3213,7 +3365,7 @@
                         </div>
                         <div class="speed-option ${currentSpeed === 'express' ? 'selected' : ''}" 
                              onclick="selectSpeed('express', ${expressFee})" 
-                             style="flex: 1; padding: 1rem; border: 2px solid ${currentSpeed === 'express' ? '#3b82f6' : '#e2e8f0'}; 
+                             style="flex: 1; padding: 1rem; border: 2px solid ${currentSpeed === 'express' ? '#3b82f6' : 'var(--border)'}; 
                                     border-radius: var(--border-radius); background: ${currentSpeed === 'express' ? 'rgba(59, 130, 246, 0.1)' : 'var(--bg-tertiary)'}; 
                                     cursor: pointer; transition: all 0.3s ease;">
                             <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⚡</div>
@@ -3226,10 +3378,25 @@
             `;
         }
 
+        // ========== PERBAIKAN: CALCULATOR FUNCTIONS ==========
         function selectSpeed(speed, fee) {
             currentSpeed = speed;
             speedFee = fee;
             updateSpeedSelector();
+            calculateAIPrice();
+        }
+
+        function adjustAICalculatorQuantity(change) {
+            const quantityInput = document.getElementById('quantity');
+            if (!quantityInput) return;
+            
+            let currentValue = parseInt(quantityInput.value) || 1;
+            currentValue += change;
+            
+            if (currentValue < 1) currentValue = 1;
+            if (currentValue > 1000) currentValue = 1000;
+            
+            quantityInput.value = currentValue;
             calculateAIPrice();
         }
 
@@ -3240,24 +3407,20 @@
             const priceBreakdownElement = document.getElementById('priceBreakdown');
             
             if (!serviceType || !quantityInput || !totalPriceElement || !priceBreakdownElement) {
-                console.error('Elemen kalkulator tidak ditemukan');
+                console.error('Calculator elements not found');
                 return;
             }
             
-            // Get values
             const quantity = parseInt(quantityInput.value) || 1;
             const servicePrice = parseInt(serviceType.value) || 7000;
             
-            // Calculate base price
             let basePrice = servicePrice * quantity;
             let total = basePrice;
             
-            // Add express fee if selected
             if (currentSpeed === 'express') {
                 total += speedFee;
             }
             
-            // Apply coupon discount
             const couponInput = document.getElementById('coupon');
             let discount = 0;
             let couponCode = '';
@@ -3274,7 +3437,6 @@
                 total -= discount;
             }
             
-            // Format total price
             const formattedTotal = new Intl.NumberFormat('id-ID', {
                 style: 'currency',
                 currency: 'IDR',
@@ -3283,7 +3445,6 @@
             
             totalPriceElement.textContent = formattedTotal;
             
-            // Update price breakdown
             let breakdownHTML = `
                 <div style="margin-bottom: 0.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-light);">
                     <span style="color: var(--text-muted);">${quantity} ${currentUnit} × Rp ${servicePrice.toLocaleString('id-ID')}</span>
@@ -3319,19 +3480,6 @@
             priceBreakdownElement.innerHTML = breakdownHTML;
         }
 
-        function adjustAICalculatorQuantity(change) {
-            const quantityInput = document.getElementById('quantity');
-            let currentValue = parseInt(quantityInput.value) || 1;
-            currentValue += change;
-            
-            if (currentValue < 1) currentValue = 1;
-            if (currentValue > 1000) currentValue = 1000;
-            
-            quantityInput.value = currentValue;
-            
-            calculateAIPrice();
-        }
-
         function applyCoupon() {
             const couponInput = document.getElementById('coupon');
             const coupon = couponInput.value.trim().toUpperCase();
@@ -3357,7 +3505,6 @@
             const quantity = document.getElementById('quantity').value;
             const totalPrice = document.getElementById('totalPrice').textContent;
             const couponInput = document.getElementById('coupon');
-            const coupon = couponInput.value ? ` (Kupon: ${couponInput.value})` : '';
             
             if (!serviceType) {
                 showNotification('Error', 'Silakan pilih layanan terlebih dahulu', 'error');
@@ -3365,9 +3512,7 @@
             }
             
             const selectedOption = serviceType.options[serviceType.selectedIndex];
-            const serviceDetails = selectedOption.text;
             
-            // Buat pesan WhatsApp
             let message = `Halo JOKIINAJA! 🚀\n\n`;
             message += `Saya ingin order menggunakan Kalkulator AI:\n\n`;
             message += `📋 *Layanan:* ${currentServiceName}\n`;
@@ -3377,41 +3522,31 @@
                 message += `🎫 *Kupon:* ${couponInput.value}\n`;
             }
             message += `💰 *Total Harga:* ${totalPrice}\n\n`;
-            message += `_Detail: ${serviceDetails}_\n\n`;
+            message += `_Detail: ${selectedOption.text}_\n\n`;
             message += `Bisa dibantu proses ordernya?`;
             
-            // Encode message untuk WhatsApp
             const encodedMessage = encodeURIComponent(message);
             const whatsappUrl = `https://wa.me/6282125283598?text=${encodedMessage}`;
             
-            // Buka WhatsApp di tab baru
             window.open(whatsappUrl, '_blank');
-            
-            // Tutup modal dengan animasi
             closeOrderModal();
-            
-            // Tampilkan notifikasi
             showNotification('Order Diproses!', 'WhatsApp telah dibuka, silakan lanjutkan chat dengan admin kami', 'success');
         }
 
         function resetAICalculator() {
-            // Reset form values
             document.getElementById('serviceType').selectedIndex = 0;
-            document.getElementById('quantity').value = 1;
+            document.getElementById('quantity').value = '1';
             document.getElementById('coupon').value = '';
             
-            // Reset variables
             currentSpeed = 'normal';
             speedFee = 0;
             currentServicePrice = 7000;
             currentUnit = 'halaman';
             currentServiceName = 'Laporan & Makalah';
             
-            // Update UI
             updateSpeedSelector();
             calculateAIPrice();
             
-            // Tampilkan notifikasi
             showNotification('Kalkulator Direset', 'Semua input telah dikembalikan ke pengaturan awal', 'info');
         }
 
@@ -3424,7 +3559,6 @@
                 timestamp: new Date().toISOString()
             };
             
-            // Simpan ke localStorage
             try {
                 localStorage.setItem('jokiOrderDraft', JSON.stringify(draftData));
                 showNotification('Draft Disimpan!', 'Order Anda telah disimpan. Buka kembali kalkulator untuk melanjutkan.', 'success');
@@ -3438,8 +3572,6 @@
                 const savedDraft = localStorage.getItem('jokiOrderDraft');
                 if (savedDraft) {
                     const draft = JSON.parse(savedDraft);
-                    
-                    // Terapkan nilai draft
                     document.getElementById('serviceType').value = draft.serviceType || '7000';
                     document.getElementById('quantity').value = draft.quantity || '1';
                     document.getElementById('coupon').value = draft.coupon || '';
@@ -3448,24 +3580,20 @@
                         currentSpeed = draft.speed;
                     }
                     
-                    // Update current price
                     currentServicePrice = parseInt(draft.serviceType) || 7000;
-                    
-                    // Update UI
                     updateSpeedSelector();
                     calculateAIPrice();
-                    
                     return true;
                 }
             } catch (e) {
-                console.log('Tidak ada draft yang tersimpan atau draft rusak');
+                console.log('No saved draft or draft corrupted');
             }
             return false;
         }
 
         // ========== MAIN JAVASCRIPT ==========
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('JOKIINAJA - Loading dengan Kalkulator AI...');
+            console.log('JOKIINAJA - Loading dengan Kalkulator AI yang sudah diperbaiki...');
             
             // ========== LOADING SCREEN ==========
             setTimeout(() => {
@@ -3488,8 +3616,7 @@
                 animateNumberCounters();
                 
                 // Initialize calculator
-                updateSpeedSelector();
-                calculateAIPrice();
+                setupAICalculator();
                 
                 // Load saved draft
                 loadOrderDraft();
@@ -3520,6 +3647,28 @@
                     updateCounter();
                 });
             }
+            
+            // ========== PERBAIKAN: MODAL EVENT LISTENERS ==========
+            // Close modal dengan ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && document.getElementById('orderModal').classList.contains('active')) {
+                    closeOrderModal();
+                }
+            });
+            
+            // Close modal dengan klik di luar konten
+            document.getElementById('orderModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeOrderModal();
+                }
+            });
+            
+            // Prevent modal close ketika klik di dalam konten
+            document.querySelectorAll('.modal-content').forEach(content => {
+                content.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
             
             // ========== HEADER SCROLL BEHAVIOR ==========
             let lastScrollTop = 0;
@@ -3597,26 +3746,49 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
             document.querySelector(`.theme-option[data-theme="${savedTheme}"]`).classList.add('active');
             
-            // ========== MOBILE NAVIGATION ==========
+            // ========== PERBAIKAN: MOBILE NAVIGATION ==========
             const mobileToggle = document.getElementById('mobileToggle');
             const navLinks = document.getElementById('navLinks');
             
-            mobileToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('active');
-                mobileToggle.querySelector('i').classList.toggle('fa-bars');
-                mobileToggle.querySelector('i').classList.toggle('fa-times');
-            });
+            if (mobileToggle && navLinks) {
+                mobileToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('active');
+                    const icon = mobileToggle.querySelector('i');
+                    if (icon.classList.contains('fa-bars')) {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!mobileToggle.contains(e.target) && !navLinks.contains(e.target) && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        mobileToggle.querySelector('i').classList.remove('fa-times');
+                        mobileToggle.querySelector('i').classList.add('fa-bars');
+                    }
+                });
+            }
             
-            // Close mobile menu when clicking a link
+            // ========== PERBAIKAN: NAV LINK ACTIVE STATE ==========
             document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', () => {
-                    navLinks.classList.remove('active');
-                    mobileToggle.querySelector('i').classList.remove('fa-times');
-                    mobileToggle.querySelector('i').classList.add('fa-bars');
-                    
-                    // Update active nav link
+                link.addEventListener('click', function(e) {
+                    // Update active state
                     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
+                    this.classList.add('active');
+                    
+                    // Close mobile menu if open
+                    if (navLinks && navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                        if (mobileToggle) {
+                            mobileToggle.querySelector('i').classList.remove('fa-times');
+                            mobileToggle.querySelector('i').classList.add('fa-bars');
+                        }
+                    }
                 });
             });
             
@@ -3629,7 +3801,7 @@
             });
             
             // ========== NOTIFICATION SYSTEM ==========
-            function showNotification(title, message, type = 'info') {
+            window.showNotification = function(title, message, type = 'info') {
                 const notification = document.getElementById('notification');
                 const notificationTitle = document.getElementById('notificationTitle');
                 const notificationMessage = document.getElementById('notificationMessage');
@@ -3658,11 +3830,11 @@
                 setTimeout(() => {
                     hideNotification();
                 }, 5000);
-            }
+            };
             
-            function hideNotification() {
+            window.hideNotification = function() {
                 document.getElementById('notification').classList.remove('show');
-            }
+            };
             
             // ========== TESTIMONIALS SYSTEM ==========
             const testimonials = [
@@ -3811,7 +3983,7 @@
                 currentTestimonialIndex = 0;
             }
             
-            function nextTestimonial() {
+            window.nextTestimonial = function() {
                 const track = document.getElementById('testimonialsTrack');
                 const currentTestimonial = document.getElementById('currentTestimonial');
                 const totalTestimonials = document.getElementById('totalTestimonials');
@@ -3824,9 +3996,9 @@
                 track.scrollLeft = currentTestimonialIndex * cardWidth;
                 
                 currentTestimonial.textContent = currentTestimonialIndex + 1;
-            }
+            };
             
-            function prevTestimonial() {
+            window.prevTestimonial = function() {
                 const track = document.getElementById('testimonialsTrack');
                 const currentTestimonial = document.getElementById('currentTestimonial');
                 const totalTestimonials = document.getElementById('totalTestimonials');
@@ -3839,7 +4011,7 @@
                 track.scrollLeft = currentTestimonialIndex * cardWidth;
                 
                 currentTestimonial.textContent = currentTestimonialIndex + 1;
-            }
+            };
             
             // Initialize testimonials
             renderTestimonials();
@@ -3940,7 +4112,7 @@
             });
             
             // ========== ORDER VIA WHATSAPP ==========
-            function orderViaWhatsApp(serviceName, basePrice, unit, isExpress) {
+            window.orderViaWhatsApp = function(serviceName, basePrice, unit, isExpress) {
                 let price = isExpress ? basePrice + (serviceName.includes('CEPAT') ? 0 : getExpressFee(serviceName)) : basePrice;
                 let expressText = isExpress ? ' (Express)' : '';
                 
@@ -3953,7 +4125,7 @@
                 window.open(whatsappUrl, '_blank');
                 
                 showNotification('Order diproses!', 'WhatsApp telah dibuka untuk order ' + serviceName, 'success');
-            }
+            };
             
             function getExpressFee(serviceName) {
                 if (serviceName.includes('Laporan') || serviceName.includes('PowerPoint') || serviceName.includes('Ringkasan')) {
@@ -3969,45 +4141,45 @@
             }
             
             // ========== OTHER FUNCTIONS ==========
-            function showFastServiceInfo() {
+            window.showFastServiceInfo = function() {
                 showNotification(
                     '⚡ Express Service Info',
                     'Layanan cepat tersedia untuk semua jenis tugas. Biaya tambahan: Makalah/PowerPoint +35K, Jurnal +50K, Programming +100K, Analisis +75K. Pengerjaan 6-12 jam.',
                     'info'
                 );
-            }
+            };
             
-            function showPrivacyPolicy() {
+            window.showPrivacyPolicy = function() {
                 showNotification(
                     '🔒 Kebijakan Privasi',
                     'Data Anda aman bersama kami. Tidak ada informasi yang dibagikan ke pihak ketiga. Semua komunikasi dienkripsi.',
                     'info'
                 );
-            }
+            };
             
-            function showTerms() {
+            window.showTerms = function() {
                 showNotification(
                     '📜 Syarat & Ketentuan',
                     '1. Revisi gratis tanpa batas\n2. Pembayaran 50% di awal, 50% setelah selesai\n3. Garansi anti plagiasi\n4. Waktu pengerjaan sesuai paket yang dipilih',
                     'info'
                 );
-            }
+            };
             
-            function showRefundPolicy() {
+            window.showRefundPolicy = function() {
                 showNotification(
                     '💸 Kebijakan Pengembalian',
                     'Pengembalian dana hanya berlaku jika:\n1. Pengerjaan melebihi deadline yang disepakati\n2. Kualitas tidak sesuai dengan contoh\n3. Ada kesalahan dari kami',
                     'info'
                 );
-            }
+            };
             
-            function showSecretAdminLogin() {
+            window.showSecretAdminLogin = function() {
                 showNotification(
                     '🚫 Akses Ditolak',
                     'Fitur ini hanya tersedia untuk admin terdaftar. Jika Anda admin, hubungi developer.',
                     'error'
                 );
-            }
+            };
             
             // ========== ANIMATION ON SCROLL ==========
             const observerOptions = {
@@ -4028,27 +4200,8 @@
                 observer.observe(el);
             });
             
-            // ========== EVENT LISTENERS FOR MODAL ==========
-            
-            // Tambahkan event listener untuk close modal dengan ESC
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && document.getElementById('orderModal').classList.contains('active')) {
-                    closeOrderModal();
-                }
-            });
-            
-            // Pastikan modal bisa ditutup dengan klik di luar konten
-            document.getElementById('orderModal')?.addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeOrderModal();
-                }
-            });
-            
-            // Setup calculator saat pertama kali
-            setupAICalculator();
-            
-            // Logo animation on click
-            document.getElementById('logoContainer').addEventListener('click', function(e) {
+            // ========== PERBAIKAN: Logo animation on click ==========
+            document.getElementById('logoContainer')?.addEventListener('click', function(e) {
                 if (e.target.closest('.logo')) {
                     this.classList.add('animating');
                     setTimeout(() => {
@@ -4057,7 +4210,7 @@
                 }
             });
             
-            // ========== MOBILE OPTIMIZATION FUNCTIONS ==========
+            // ========== PERBAIKAN: MOBILE OPTIMIZATION FUNCTIONS ==========
             // Prevent horizontal scrolling on mobile
             document.addEventListener('touchmove', function(e) {
                 if (e.touches.length > 1) e.preventDefault();
@@ -4066,7 +4219,7 @@
             // Close theme options when scrolling
             window.addEventListener('scroll', function() {
                 const themeOptions = document.getElementById('themeOptions');
-                if (themeOptions.classList.contains('show')) {
+                if (themeOptions && themeOptions.classList.contains('show')) {
                     themeOptions.classList.remove('show');
                 }
             });
@@ -4079,26 +4232,18 @@
                     // Close mobile menu jika layar diperbesar
                     if (window.innerWidth > 768) {
                         const navLinks = document.getElementById('navLinks');
-                        navLinks.classList.remove('active');
+                        if (navLinks) navLinks.classList.remove('active');
                         const mobileToggle = document.getElementById('mobileToggle');
-                        mobileToggle.querySelector('i').classList.remove('fa-times');
-                        mobileToggle.querySelector('i').classList.add('fa-bars');
+                        if (mobileToggle) {
+                            mobileToggle.querySelector('i').classList.remove('fa-times');
+                            mobileToggle.querySelector('i').classList.add('fa-bars');
+                        }
                     }
                 }, 250);
             });
             
-            console.log('JOKIINAJA - Kalkulator AI siap digunakan! 🚀');
+            console.log('JOKIINAJA - Semua perbaikan telah diterapkan! 🚀');
         });
-        
-        // Test function untuk debugging
-        window.testCalculator = function() {
-            console.log('🧪 Testing AI Calculator...');
-            console.log('Current speed:', currentSpeed);
-            console.log('Current service price:', currentServicePrice);
-            console.log('Current unit:', currentUnit);
-            console.log('Modal element:', document.getElementById('orderModal'));
-            return '✅ Calculator ready!';
-        };
     </script>
 </body>
 </html>
